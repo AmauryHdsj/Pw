@@ -2,10 +2,12 @@
 class Categorie{
     private $nom;
     private $coderaccourci;
+    private $id;
 
-    public function __construct($nom,$coderaccourci){
+    public function __construct($nom,$coderaccourci,$id){
         $this->nom=$nom;
         $this->coderaccourci=$coderaccourci;
+        $this->id=$id;
 
     }
 
@@ -39,5 +41,21 @@ class Categorie{
     public function setNom($nom)
     {
         $this->nom = $nom;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 }
