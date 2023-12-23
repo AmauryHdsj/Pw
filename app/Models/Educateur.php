@@ -9,7 +9,7 @@ class Licencie
     private $prenom;
     private $contact; // Contient un objet de type Contact
 
-// Constructeur, getters et setters
+
 }
 
 // app/Models/Educateur.php
