@@ -34,11 +34,8 @@ class AuthController
     public function isAdmin()
     {
         // Vérifiez si l'utilisateur est un administrateur
-        if (isset($_SESSION['user']) && $_SESSION['user']->isAdmin()) {
-            return true;
-        } else {
-            return false;
-        }
+        
+        return isset($_SESSION['user']) && $_SESSION['user']->isAdmin();
     }
 
     // Ajoutez d'autres méthodes d'authentification ou de gestion des sessions au besoin

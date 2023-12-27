@@ -9,45 +9,74 @@ class CategorieDAO {
 
     public function createCategorie(Categorie $categorie) {
         try {
-            $stmt = $this->connexion->pdo->prepare("INSERT INTO categorie(nom, nom_raccourci) VALUES (:nom, :nom_raccourci)");
+            $stmt = $this->connexion->pdo->prepare("INSERT INTO categories(nom, code_raccourci) VALUES (:nom, :code_raccourci)");
             $stmt->bindValue(":nom", $categorie->getNom(), PDO::PARAM_STR);
-            $stmt->bindValue(":nom_raccourci", $categorie->getCoderaccourci(), PDO::PARAM_STR);
-            $stmt->execute();
+            $stmt->bindValue(":code_raccourci", $categorie->getCoderaccourci(), PDO::PARAM_STR);
+           // $stmt->execute([$categorie->getNom(), $categorie->getCoderaccourci()]);
+           $stmt->execute();
             return true;
         } catch (PDOException $e) {
-            die("Erreur de la fonction createCategorie" . $e->getMessage());
+            throw new PDOException("Erreur de la fonction createCategorie" . $e->getMessage());
         }
     }
+
+        // MÃ©thode pour rÃ©cupÃ©rer un contact par son ID
+        public function getById($id) {
+            try {
+                $stmt = $this->connexion->pdo->prepare("SELECT * FROM categories WHERE id = ?");
+                $stmt->execute([$id]);
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+                if ($row) {
+                    return new Categorie($row['id'],$row['nom'], $row['code_raccourci']);
+                } else {
+                    return null; // Aucun contact trouvÃ© avec cet ID
+                }
+            } catch (PDOException $e) {
+                // GÃ©rer les erreurs de rÃ©cupÃ©ration ici
+                return null;
+            }
+        }
 
     public function setCategorie(Categorie $categorie) {
         try {
-            $stmt = $this->connexion->pdo->prepare("UPDATE categorie SET nom=:nom, nom_raccourci=:nom_raccourci WHERE id=:id");
-            $stmt->bindValue(":nom", $categorie->getNom(), PDO::PARAM_STR);
-            $stmt->bindValue(":nom_raccourci", $categorie->getCoderaccourci(), PDO::PARAM_STR);
-            $stmt->bindValue(":id", $categorie->getId(), PDO::PARAM_INT);
-            $stmt->execute();
+            $stmt = $this->connexion->pdo->prepare("UPDATE categories SET nom = ?, code_raccourci = ? WHERE id = ?");
+            $stmt->execute([$categorie->getNom(), $categorie->getCoderaccourci(), $categorie->getId()]);
+            return true;
         } catch (PDOException $e) {
-            die("Erreur de la fonction setCategorie" . $e->getMessage());
+            // GÃ©rer les erreurs de mise Ã  jour ici
+            echo "Erreur de mise à jour : " . $e->getMessage();
+            return false;
         }
     }
 
-    public function removeCategorie(Categorie $categorie) {
+    
+
+    public function removeCategorie($id) {
         try {
-            $stmt = $this->connexion->pdo->prepare("DELETE FROM categorie WHERE id = :id");
-            $stmt->bindValue(":id", $categorie->getId(), PDO::PARAM_INT);
-            $stmt->execute();
+            $stmt = $this->connexion->pdo->prepare("DELETE FROM categories WHERE id = ?");
+            $stmt->execute([$id]);
+            return true;
         } catch (PDOException $e) {
-            die("Erreur de la fonction removeCategorie" . $e->getMessage());
+            // GÃ©rer les erreurs de suppression ici
+            return false;
         }
     }
 
     public function listCategories() {
         try {
-            $stmt = $this->connexion->pdo->prepare("SELECT * FROM categorie");
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt = $this->connexion->pdo->query("SELECT * FROM categories");
+            $categories = [];
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $categories[] = new Categorie($row['id'], $row['nom'], $row['code_raccourci']);
+
+            }
+
+            return $categories;
         } catch (PDOException $e) {
-            die("Erreur de la fonction listCategories" . $e->getMessage());
+            return [];
         }
     }
+
 }
