@@ -20,16 +20,13 @@ class AuthController
             return true;
         } else {
             // Authentification échouée
+            // Déconnectez l'utilisateur en détruisant la session
+            session_destroy();
+            header('Location: /'); // Redirigez l'utilisateur vers la page d'accueil par exemple
             return false;
         }
     }
 
-    public function logout()
-    {
-        // Déconnectez l'utilisateur en détruisant la session
-        session_destroy();
-        header('Location: /'); // Redirigez l'utilisateur vers la page d'accueil par exemple
-    }
 
     public function isAdmin()
     {
