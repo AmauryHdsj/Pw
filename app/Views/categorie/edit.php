@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier un Contact</title>
+    <!-- Ajoutez ici vos liens CSS ou styles pour la mise en forme -->
+        <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <h1>Modifier un Contact</h1>
+    <a href="HomeController.php">Retour à la liste des contacts</a>
+
+    <?php if ($categorie): ?>
+        <form action="EditCategorieController.php?id=<?php echo $categorie->getId(); ?>" method="post">
+            <label for="nom">Nom :</label>
+            <input type="text" id="nom" name="nom" value="<?php echo $categorie->getNom(); ?>" required><br>
+
+            <label for="coderaccourci">Code :</label>
+            <input type="text" id="coderaccourci" name="coderaccourci" value="<?php echo $categorie->getCoderaccourci(); ?>" required><br>
+
+            <input type="submit" value="Modifier">
+        </form>
+    <?php else: ?>
+        <p>Le contact n'a pas été trouvé.</p>
+    <?php endif; ?>
+
+</body>
+</html>
+
