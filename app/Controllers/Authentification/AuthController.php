@@ -2,38 +2,43 @@
 
 class AuthController
 {
-    private $educateurDAO;
-
-    public function __construct(EducateurDAO $educateurDAO)
+    public function __construct()
     {
-        $this->educateurDAO = $educateurDAO;
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Récupérez les valeurs des champs du formulaire
+            $email = isset($_POST['email']) ? $_POST['email'] : null;
+            $password = isset($_POST['password']) ? $_POST['password'] : null;
+
+            // Appelez la méthode login du contrôleur
+            if ($this->login($email, $password)) {
+                // L'authentification a réussi,
+                header('Location: http://localhost:63342/Categorie.php/app/Views/Home/HomeView.php?_ijt=9rkql8qbtp0h6tdhd9agnh8jh&_ij_reload=RELOAD_ON_SAVE');
+            
+            } else {
+                // L'authentification a échoué,
+                header('Location: http://localhost:63342/Categorie.php/app/Views/Authentification/AuthFailed.php?_ijt=ua4p56l0jofqmptnldmfsuj1uo&_ij_reload=RELOAD_ON_SAVE');
+                exit;
+            }
+        }
     }
 
     public function login($email, $motDePasse)
     {
-        // Vérifier les informations d'authentification
-        $educateur = $this->educateurDAO->getEducateurByEmail($email);
+        // Vérifie les informations d'authentification
+        $educateurDAO = new EducateurDAO();
+        $educateur = $educateurDAO->getEducateurByEmail($email);
 
-        if ($educateur && password_verify($motDePasse, $educateur->getMotDePasse())) {
+        if (!empty($educateur["email"]) && $educateur["isAdmin"] == '1' /*&& password_verify($motDePasse, $educateur["mot_de_passe"])*/) {
             // Authentification réussie
             $_SESSION['user'] = $educateur; // Stockez l'utilisateur dans la session
             return true;
         } else {
             // Authentification échouée
-            // Déconnectez l'utilisateur en détruisant la session
-            session_destroy();
-            header('Location: /'); // Redirigez l'utilisateur vers la page d'accueil par exemple
             return false;
         }
     }
 
 
-    public function isAdmin()
-    {
-        // Vérifiez si l'utilisateur est un administrateur
-        
-        return isset($_SESSION['user']) && $_SESSION['user']->isAdmin();
-    }
 
     // Ajoutez d'autres méthodes d'authentification ou de gestion des sessions au besoin
 }

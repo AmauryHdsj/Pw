@@ -1,8 +1,11 @@
 <?php
-
+/**
 // Inclure le fichier de configuration
-include('/mon_projet/classes/DAO/ContactDAO.php');
-include('/mon_projet/classes/models/Connexion.php');
+require_once('../app/DAO/ContactDAO.php');
+require_once('../app/DAO/EducateurDAO.php');
+require_once('../app/DAO/CategorieDAO.php');
+require_once('../app/DAO/LicencieDAO.php');
+require_once('../app/Models/Connexion.php');
 require_once("config/config.php");
 
 $contactDAO = new ContactDAO();
@@ -35,6 +38,8 @@ if (array_key_exists($page, $controllers)) {
     $controller->index(); // Vous pouvez ajuster la méthode par défaut selon votre convention
 } else {
     // Page non trouvée, vous redirigerez vers une page d'erreur 404
-    echo "Page non trouvée";
+    echo "Page non trouvédvsere";
 }
 ?>
+
+*/
