@@ -7,16 +7,18 @@ class Licencie
     private $numeroLicence;
     private $nom;
     private $prenom;
-    private $contact; // Contient un objet de type Contact
+    private $contact; // Objet Contact
+    private $categorie; // Objet Categori
 
 // Constructeur
-    public function __construct($numeroLicence, $nom, $prenom, $contact)
-    {
-        $this->numeroLicence = $numeroLicence;
-        $this->nom = $nom;
-        $this->prenom = $prenom;
-        $this->contact = $contact;
-    }
+public function __construct($id, $numeroLicence, $nom, $prenom, $contact, $categorie) {
+    $this->id = $id;
+    $this->numeroLicence = $numeroLicence;
+    $this->nom = $nom;
+    $this->prenom = $prenom;
+    $this->contact = $contact;
+    $this->categorie = $categorie;
+}
 
     /**
      * @return mixed
@@ -98,5 +100,20 @@ class Licencie
         $this->contact = $contact;
     }
 
+     /**
+     * @return mixed
+     */
+
+    public function getCategorie() {
+        return $this->categorie;
+    }
+
+     /**
+     * @param mixed $categorie
+     */
+    public function setCategorie($categorie)
+    {
+        $this->categorie = $categorie;
+    }
 
 }
