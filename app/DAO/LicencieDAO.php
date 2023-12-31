@@ -9,53 +9,106 @@ class LicencieDAO {
 
     public function createLicencie(Licencie $licencie) {
         try {
-            $stmt = $this->connexion->pdo->prepare("INSERT INTO licencie(numero_licence, nom, prenom, contact_id, categorie_id) VALUES (:numero_licence, :nom, :prenom, :contact_id, :categorie_id)");
-            $stmt->bindValue(":numero_licence", $licencie->getNumeroLicence(), PDO::PARAM_STR);
-            $stmt->bindValue(":nom", $licencie->getNom(), PDO::PARAM_STR);
-            $stmt->bindValue(":prenom", $licencie->getPrenom(), PDO::PARAM_STR);
-            $stmt->bindValue(":contact_id", $licencie->getContactId(), PDO::PARAM_INT);
-            $stmt->bindValue(":categorie_id", $licencie->getCategorieId(), PDO::PARAM_INT);
+            $stmt = $this->connexion->pdo->prepare("INSERT INTO licencies (numero_licence, nom, prenom, contact_id, categorie_id) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$licencie->getNumeroLicence(), $licencie->getNom(), $licencie->getPrenom(), $licencie->getContact()->getId(), $licencie->getCategorie()->getId()]);
 
-            $stmt->execute();
+            $licencie->setId($this->connexion->pdo->lastInsertId());
             return true;
         } catch (PDOException $e) {
-            die("Erreur de la fonction createLicencie=" . $e->getMessage());
+            // Gérer l'erreur
+            return false;
         }
     }
 
     public function setLicencie(Licencie $licencie) {
         try {
-            $stmt = $this->connexion->pdo->prepare("UPDATE licencie SET numero_licence=:numero_licence, nom=:nom, prenom=:prenom, contact_id=:contact_id, categorie_id=:categorie_id WHERE id=:id");
-            $stmt->bindValue(":numero_licence", $licencie->getNumeroLicence(), PDO::PARAM_STR);
-            $stmt->bindValue(":nom", $licencie->getNom(), PDO::PARAM_STR);
-            $stmt->bindValue(":prenom", $licencie->getPrenom(), PDO::PARAM_STR);
-            $stmt->bindValue(":contact_id", $licencie->getContactId(), PDO::PARAM_INT);
-            $stmt->bindValue(":categorie_id", $licencie->getCategorieId(), PDO::PARAM_INT);
-            $stmt->bindValue(":id", $licencie->getId(), PDO::PARAM_INT);
-
-            $stmt->execute();
+            $stmt = $this->connexion->pdo->prepare("UPDATE licencies SET numero_licence=?, nom=?, prenom=?, contact_id=?, categorie_id=? WHERE id=?");
+            $stmt->execute([$licencie->getNumeroLicence(), $licencie->getNom(), $licencie->getPrenom(), $licencie->getContact()->getId(), $licencie->getCategorie()->getId(), $licencie->getId()]);
+            return true;
         } catch (PDOException $e) {
-            die("Erreur de la fonction setLicencie=" . $e->getMessage());
+            // Gérer l'erreur
+            return false;
         }
     }
 
     public function removeLicencie(Licencie $licencie) {
         try {
-            $stmt = $this->connexion->pdo->prepare("DELETE FROM licencie WHERE id = :id");
-            $stmt->bindValue(":id", $licencie->getId(), PDO::PARAM_INT);
-            $stmt->execute();
+            $stmt = $this->connexion->pdo->prepare("DELETE FROM licencies WHERE id = ?");
+            $stmt->execute([$licencie->getId()]);
+            return true;
         } catch (PDOException $e) {
-            die("Erreur de la fonction removeLicencie=" . $e->getMessage());
+            // Gérer l'erreur
+            return false;
         }
     }
 
     public function listLicencies() {
         try {
-            $stmt = $this->connexion->pdo->prepare("SELECT * FROM licencie");
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt = $this->connexion->pdo->query("SELECT * FROM licencies");
+            $licencies = [];
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $contactDAO = new ContactDAO($this->connexion);
+                $categorieDAO = new CategorieDAO($this->connexion);
+
+                $contact = $contactDAO->getById($row['contact_id']);
+                $categorie = $categorieDAO->getById($row['categorie_id']);
+
+                $licencie = new Licencie(
+                    $row['id'],
+                    $row['numero_licence'],
+                    $row['nom'],
+                    $row['prenom'],
+                    $contact,
+                    $categorie
+                );
+
+                //$licencie->setId($row['id']);
+                $licencies[] = $licencie;
+            }
+
+            return $licencies;
         } catch (PDOException $e) {
-            die("Erreur de la fonction listLicencies=" . $e->getMessage());
+            // Gérer les erreurs de récupération ici
+            return [];
+        }
+    }
+
+    public function getLicencieById($id) {
+        try {
+            $stmt = $this->connexion->pdo->prepare("SELECT * FROM licencies WHERE id = ?");
+            $stmt->execute([$id]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($result) {
+                $contactDAO = new ContactDAO($this->connexion);
+                $categorieDAO = new CategorieDAO($this->connexion);
+
+                $contact = $contactDAO->getById($result['contact_id']);
+                $categorie = $categorieDAO->getById($result['categorie_id']);
+
+                $licencie = new Licencie(
+                    $result['id'],
+                    $result['numero_licence'],
+                    $result['nom'],
+                    $result['prenom'],
+                    $contact,
+                    $categorie
+                );
+
+                //$licencie->setId($result['id']);
+                return $licencie;
+            }
+
+            return null;
+        } catch (PDOException $e) {
+            // Gérer l'erreur
+            return null;
         }
     }
 }
+
+require_once(__DIR__ . "/../Models/Contact.php");
+require_once(__DIR__ . "/ContactDAO.php");
+require_once(__DIR__ . "/../Models/Categorie.php");
+require_once(__DIR__ . "/CategorieDAO.php");

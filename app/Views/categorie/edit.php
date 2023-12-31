@@ -7,8 +7,8 @@
         <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
-    <h1>Modifier un Contact</h1>
-    <a href="HomeController.php">Retour à la liste des contacts</a>
+    <h1>Modifier une catégorie</h1>
+    <a href="../CategorieController.php">Retour à la liste des catégories</a>
 
     <?php if ($categorie): ?>
         <form action="EditCategorieController.php?id=<?php echo $categorie->getId(); ?>" method="post">

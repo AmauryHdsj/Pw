@@ -8,11 +8,11 @@
 </head>
 <body>
     <h1>Supprimer un Contact</h1>
-    <a href="../CategorieController.php">Retour à la liste des contacts</a>
+    <a href="../ContactController.php">Retour à la liste des contacts</a>
 
-    <?php if ($categorie): ?>
-        <p>Voulez-vous vraiment supprimer le contact "<?php echo $categorie->getNom(); ?> <?php echo $categorie->getCoderaccourci(); ?>" ?</p>
-        <form action="DeleteCategorieController.php?id=<?php echo $categorie->getId(); ?>" method="post">
+    <?php if ($contact): ?>
+        <p>Voulez-vous vraiment supprimer le contact "<?php echo $contact->getNom(); ?> <?php echo $contact->getPrenom(); ?>" ?</p>
+        <form action="DeleteContactController.php?id=<?php echo $contact->getId(); ?>" method="post">
             <input type="submit" value="Oui, Supprimer">
         </form>
     <?php else: ?>

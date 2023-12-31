@@ -1,16 +1,18 @@
 <?php
 
 class Contact{
+    private $id;
     private $nom;
     private $prenom;
     private $email;
     private $numero;
 
-    public function __construct($nom,$prenom,$email,$numero){
+    public function __construct($id,$nom,$prenom,$email,$numero){
+        $this->id=$id;
         $this->nom=$nom;
         $this->prenom=$prenom;
         $this->email=$email;
-        $this->numero=$email;
+        $this->numero=$numero;
     }
 
     /**
@@ -75,5 +77,13 @@ class Contact{
     public function setNumero($numero)
     {
         $this->numero = $numero;
+    }
+
+      /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }
