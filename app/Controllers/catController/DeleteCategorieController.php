@@ -1,19 +1,12 @@
 <?php
-namespace catController;
-
-use CategorieDAO;
-
-class DeleteCategorieController
-{
+class DeleteCategorieController {
     private $categorieDAO;
 
-    public function __construct(CategorieDAO $categorieDAO)
-    {
+    public function __construct(CategorieDAO $categorieDAO) {
         $this->categorieDAO = $categorieDAO;
     }
 
-    public function deleteCategorie($categorieId)
-    {
+    public function deleteCategorie($categorieId) {
         // Récupérer le contact à supprimer en utilisant son ID
         $categorie = $this->categorieDAO->getById($categorieId);
 
@@ -39,6 +32,14 @@ class DeleteCategorieController
         include('../../Views/categorie/delete.php');
     }
 }
+
+require_once("../../../config/database.php");
+require_once("../../Models/Connexion.php");
+require_once("../../Models/Categorie.php");
+require_once("../../DAO/CategorieDAO.php");
+$categorieDAO=new CategorieDAO(new Connexion());
+$controller=new DeleteCategorieController($categorieDAO);
+$controller->deleteCategorie($_GET['id']);
 
 
 ?>
