@@ -3,8 +3,8 @@
 class LicencieDAO {
     private $connexion;
 
-    public function __construct(Connexion $connexion) {
-        $this->connexion = $connexion;
+    public function __construct() {
+        $this->connexion = new connexion();
     }
 
     public function createLicencie(Licencie $licencie) {

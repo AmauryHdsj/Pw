@@ -1,12 +1,17 @@
 <?php
-class EditCategorieController {
+
+
+class EditCategorieController
+{
     private $categorieDAO;
 
-    public function __construct(CategorieDAO $categorieDAO) {
+    public function __construct(CategorieDAO $categorieDAO)
+    {
         $this->categorieDAO = $categorieDAO;
     }
 
-    public function editCategorie($categorieId) {
+    public function editCategorie($categorieId)
+    {
         // Récupérer le contact à modifier en utilisant son ID
         $categorie = $this->categorieDAO->getById($categorieId);
 
@@ -29,7 +34,7 @@ class EditCategorieController {
             // Appeler la méthode du modèle (ContactDAO) pour mettre à jour le contact
             if ($this->categorieDAO->setCategorie($categorie)) {
                 // Rediriger vers la page de détails du contact après la modification
-                header('Location:../CategorieController.php');
+                header('Location: ../../Views/categorie/HomeCategorie.php');
                 exit();
             } else {
                 // Gérer les erreurs de mise à jour du contact
@@ -37,17 +42,8 @@ class EditCategorieController {
             }
         }
 
-        // Inclure la vue pour afficher le formulaire de modification du contact
-        include('../../Views/categorie/edit.php');
     }
 }
 
-require_once("../../../config/database.php");
-require_once("../../Models/Connexion.php");
-require_once("../../Models/Categorie.php");
-require_once("../../DAO/CategorieDAO.php");
-$categorieDAO=new CategorieDAO(new Connexion());
-$controller=new EditCategorieController($categorieDAO);
-$controller->editCategorie($_GET['id']);
-?>
+
 

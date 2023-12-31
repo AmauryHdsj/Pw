@@ -13,7 +13,7 @@ class Connexion{
         global $password;
         // Connexion à la base de données en utilisant PDO
         try {
-            $this->pdo = new PDO("mysql:host=$host;dbname=$database", $username, $password);
+            $this->pdo = new PDO("mysql:host=localhost;dbname=projet_symfony","root", "");
             // Définir le mode d'erreur PDO à exception
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
