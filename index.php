@@ -1,3 +1,3 @@
 <?php
 
-header("Location:app/Controllers/LicencieController.php");
+header("Location:app/Controllers/CategorieController.php");
