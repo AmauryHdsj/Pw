@@ -3,8 +3,8 @@
 class EducateurDAO {
     private $connexion;
 
-    public function __construct() {
-        $this->connexion = new connexion();
+    public function __construct(Connexion $connexion) {
+        $this->connexion = $connexion;
     }
 
     public function createEducateur(Educateur $educateur) {
@@ -58,19 +58,4 @@ class EducateurDAO {
             die("Erreur de la fonction listEducateurs=" . $e->getMessage());
         }
     }
-    public function getEducateurByEmail($email) {
-        try {
-            $stmt = $this->connexion->pdo->prepare("SELECT email,mot_de_passe,isAdmin FROM educateur WHERE email = :email");
-            $stmt->bindParam(":email", $email, PDO::PARAM_STR);
-            $stmt->execute();
-            $resultat = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $resultat;
-        } catch (PDOException $e) {
-            die("Erreur de la fonction getEducateurByEmail : " . $e->getMessage());
-        }
-    }
-
-
-
-
 }

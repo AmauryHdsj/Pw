@@ -8,7 +8,7 @@
 <body>
 
 <h2>Formulaire de Création de Licencié</h2>
-<a href="../LicencieController.php">Retour à la liste des licenciés</a>
+<a href="../LicencieController.php">Retour à la liste des contacts</a>
 
 
 <form action="AddLicencieController.php" method="POST">

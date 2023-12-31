@@ -3,13 +3,13 @@
 class CategorieDAO {
     private $connexion;
 
-    public function __construct() {
-        $this->connexion = new connexion();
+    public function __construct(Connexion $connexion) {
+        $this->connexion = $connexion;
     }
 
     public function createCategorie(Categorie $categorie) {
         try {
-            $stmt = $this->connexion->pdo->prepare("INSERT INTO categorie(nom, code_raccourci) VALUES (:nom, :code_raccourci)");
+            $stmt = $this->connexion->pdo->prepare("INSERT INTO categories(nom, code_raccourci) VALUES (:nom, :code_raccourci)");
             $stmt->bindValue(":nom", $categorie->getNom(), PDO::PARAM_STR);
             $stmt->bindValue(":code_raccourci", $categorie->getCoderaccourci(), PDO::PARAM_STR);
            // $stmt->execute([$categorie->getNom(), $categorie->getCoderaccourci()]);
@@ -21,19 +21,22 @@ class CategorieDAO {
     }
 
         // MÃ©thode pour rÃ©cupÃ©rer un contact par son ID
-    public function getById($id) {
-        try{
-            $stmt = $this->connexion->pdo->prepare("SELECT * FROM categorie WHERE categorie.id=$id");
-            $this->connexion->pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
-            $stmt->execute();
-            //recupere les resultats de la requete
-            $resultat=$stmt->fetch(PDO::FETCH_ASSOC);
-            return $resultat;
-        }catch(PDOException $e){
-            die("Erreur de la fonction getContact : ".$e->getMessage());
+        public function getById($id) {
+            try {
+                $stmt = $this->connexion->pdo->prepare("SELECT * FROM categories WHERE id = ?");
+                $stmt->execute([$id]);
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+                if ($row) {
+                    return new Categorie($row['id'],$row['nom'], $row['code_raccourci']);
+                } else {
+                    return null; // Aucun contact trouvÃ© avec cet ID
+                }
+            } catch (PDOException $e) {
+                // GÃ©rer les erreurs de rÃ©cupÃ©ration ici
+                return null;
+            }
         }
-
-    }
 
     public function setCategorie(Categorie $categorie) {
         try {
@@ -62,11 +65,17 @@ class CategorieDAO {
 
     public function listCategories() {
         try {
-            $stmt = $this->connexion->pdo->prepare("SELECT * FROM categorie");
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt = $this->connexion->pdo->query("SELECT * FROM categories");
+            $categories = [];
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $categories[] = new Categorie($row['id'], $row['nom'], $row['code_raccourci']);
+
+            }
+
+            return $categories;
         } catch (PDOException $e) {
-            die("Erreur de la fonction listEducateurs=" . $e->getMessage());
+            return [];
         }
     }
 
