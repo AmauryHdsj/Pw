@@ -9,53 +9,102 @@ class EducateurDAO {
 
     public function createEducateur(Educateur $educateur) {
         try {
-            $stmt = $this->connexion->pdo->prepare("INSERT INTO educateur(email, mot_de_passe, nom, prenom, isAdmin) VALUES (:email, :mot_de_passe, :nom, :prenom, :isAdmin)");
-            $stmt->bindValue(":email", $educateur->getEmail(), PDO::PARAM_STR);
-            $stmt->bindValue(":mot_de_passe", $educateur->getMotDePasse(), PDO::PARAM_STR);
-            $stmt->bindValue(":nom", $educateur->getNom(), PDO::PARAM_STR);
-            $stmt->bindValue(":prenom", $educateur->getPrenom(), PDO::PARAM_STR);
-            $stmt->bindValue(":isAdmin", $educateur->isAdmin(), PDO::PARAM_INT);
+            
+            // Insérer l'éducateur dans la table educateurs et récupérer l'ID généré
+            $stmt = $this->connexion->pdo->prepare("INSERT INTO educateurs (email, mot_de_passe, est_administrateur, licencie_id) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$educateur->getEmail(), $educateur->getMotDePasse(), $educateur->getEstAdministrateur(), $educateur->getLicencie()->getId()]);
 
-            $stmt->execute();
+            $educateur->setId($this->connexion->pdo->lastInsertId());
             return true;
         } catch (PDOException $e) {
-            die("Erreur de la fonction createEducateur=" . $e->getMessage());
+            // Gérer l'erreur
+            return false;
         }
     }
 
-    public function setEducateur(Educateur $educateur) {
+    public function updateEducateur(Educateur $educateur) {
         try {
-            $stmt = $this->connexion->pdo->prepare("UPDATE educateur SET email=:email, mot_de_passe=:mot_de_passe, nom=:nom, prenom=:prenom, isAdmin=:isAdmin WHERE id=:id");
-            $stmt->bindValue(":email", $educateur->getEmail(), PDO::PARAM_STR);
-            $stmt->bindValue(":mot_de_passe", $educateur->getMotDePasse(), PDO::PARAM_STR);
-            $stmt->bindValue(":nom", $educateur->getNom(), PDO::PARAM_STR);
-            $stmt->bindValue(":prenom", $educateur->getPrenom(), PDO::PARAM_STR);
-            $stmt->bindValue(":isAdmin", $educateur->isAdmin(), PDO::PARAM_INT);
-            $stmt->bindValue(":id", $educateur->getId(), PDO::PARAM_INT);
-
-            $stmt->execute();
+            // Mettre à jour les informations de l'éducateur dans la table educateurs
+            $stmt = $this->connexion->pdo->prepare("UPDATE educateurs SET email=?, mot_de_passe=?, est_administrateur=?, licencie_id=? WHERE id=?");
+            $stmt->execute([$educateur->getEmail(), $educateur->getMotDePasse(), $educateur->getEstAdministrateur(), $educateur->getLicencie()->getId(), $educateur->getId()]);
+            return true;
         } catch (PDOException $e) {
-            die("Erreur de la fonction setEducateur=" . $e->getMessage());
+            // Gérer l'erreur
+            return false;
         }
     }
 
-    public function removeEducateur(Educateur $educateur) {
+    public function deleteEducateur(Educateur $educateur) {
         try {
-            $stmt = $this->connexion->pdo->prepare("DELETE FROM educateur WHERE id = :id");
-            $stmt->bindValue(":id", $educateur->getId(), PDO::PARAM_INT);
-            $stmt->execute();
+            // Supprimer l'éducateur de la table educateurs
+            $stmt = $this->connexion->pdo->prepare("DELETE FROM educateurs WHERE id = ?");
+            $stmt->execute([$educateur->getId()]);
+            return true;
         } catch (PDOException $e) {
-            die("Erreur de la fonction removeEducateur=" . $e->getMessage());
+            // Gérer l'erreur
+            return false;
         }
     }
 
     public function listEducateurs() {
         try {
-            $stmt = $this->connexion->pdo->prepare("SELECT * FROM educateur");
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // Récupérer la liste des éducateurs depuis la table educateurs
+            $stmt = $this->connexion->pdo->query("SELECT * FROM educateurs");
+            $educateurs = [];
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                // Pour chaque éducateur, récupérer l'objet Licencie associé
+                $licencieDAO = new LicencieDAO($this->connexion);
+                $licencie = $licencieDAO->getLicencieById($row['licencie_id']);
+
+                $educateur = new Educateur(
+                    $row['id'],
+                    $row['email'],
+                    $row['mot_de_passe'],
+                    $row['est_administrateur'],
+                    $licencie
+                );
+
+                $educateurs[] = $educateur;
+            }
+
+            return $educateurs;
         } catch (PDOException $e) {
-            die("Erreur de la fonction listEducateurs=" . $e->getMessage());
+            // Gérer les erreurs de récupération ici
+            return [];
+        }
+    }
+
+    public function getEducateurById($id) {
+        try {
+            // Récupérer les informations de l'éducateur avec l'ID spécifié
+            $stmt = $this->connexion->pdo->prepare("SELECT * FROM educateurs WHERE id = ?");
+            $stmt->execute([$id]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($result) {
+                // Récupérer l'objet Licencie associé à l'éducateur
+                $licencieDAO = new LicencieDAO($this->connexion);
+                $licencie = $licencieDAO->getLicencieById($result['licencie_id']);
+
+                $educateur = new Educateur(
+                    $result['id'],
+                    $result['email'],
+                    $result['mot_de_passe'],
+                    $result['est_administrateur'],
+                    $licencie
+                );
+
+                return $educateur;
+            }
+
+            return null;
+        } catch (PDOException $e) {
+            // Gérer l'erreur
+            return null;
         }
     }
 }
+
+require_once(__DIR__ . "/../Models/Licencie.php");
+require_once(__DIR__ . "/LicencieDAO.php");

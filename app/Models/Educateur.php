@@ -1,83 +1,67 @@
 <?php
-// app/Models/Licencie.php
 
-class Licencie
+class Educateur
 {
     private $id;
-    private $numeroLicence;
-    private $nom;
-    private $prenom;
-    private $contact; // Contient un objet de type Contact
-
-
-}
-
-// app/Models/Educateur.php
-
-class Educateur extends Licencie
-{
     private $email;
     private $motDePasse;
-    // attribut permettant de distinguer les Educateurs admin ou non
-    private $isAdmin;
+    private $estAdministrateur;
+    private $licencie; // Objet Licencie
 
-// Constructeur, getters et setters spécifiques à Educateur
+    // Constructeur, getters et setters spécifiques à Educateur
 
-    public function __construct($numeroLicence, $nom, $prenom, $contact, $email, $motDePasse, $isAdmin)
+    public function __construct($id, $email, $motDePasse, $estAdministrateur, $licencie)
     {
-        parent::__construct($numeroLicence, $nom, $prenom, $contact);
+        $this->id = $id;
         $this->email = $email;
         $this->motDePasse = $motDePasse;
-        $this->isAdmin = $isAdmin;
+        $this->estAdministrateur = $estAdministrateur;
+        $this->licencie = $licencie;
     }
 
-// Méthodes spécifiques à Educateur
+    // Méthodes spécifiques à Educateur
 
-    /**
-     * @return mixed
-     */
-    public function getEmail()
-    {
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getEmail() {
         return $this->email;
     }
 
-    /**
-     * @param mixed $email
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMotDePasse()
-    {
+    public function getMotDePasse() {
         return $this->motDePasse;
     }
 
-    /**
-     * @param mixed $motDePasse
-     */
-    public function setMotDePasse($motDePasse)
-    {
+    public function getEstAdministrateur() {
+        return $this->estAdministrateur;
+    }
+
+    public function getLicencie() {
+        return $this->licencie;
+    }
+
+    // Setters
+
+    public function setId($id) {
+        $this->id = $id;
+    }
+
+    public function setEmail($email) {
+        $this->email = $email;
+    }
+
+    public function setMotDePasse($motDePasse) {
         $this->motDePasse = $motDePasse;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getIsAdmin()
-    {
-        return $this->isAdmin;
+    public function setEstAdministrateur($estAdministrateur) {
+        $this->estAdministrateur = $estAdministrateur;
     }
 
-    /**
-     * @param mixed $isAdmin
-     */
-    public function setIsAdmin($isAdmin)
-    {
-        $this->isAdmin = $isAdmin;
+    public function setLicencie($licencie) {
+        $this->licencie = $licencie;
     }
 }
+
+
