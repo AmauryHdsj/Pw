@@ -1,42 +1,93 @@
 <?php
 
-class AuthController
-{
+
+class AuthController {
     private $educateurDAO;
 
-    public function __construct(EducateurDAO $educateurDAO)
-    {
+    public function __construct(EducateurDAO $educateurDAO) {
         $this->educateurDAO = $educateurDAO;
     }
 
-    public function login($email, $motDePasse)
-    {
-        // Vérifier les informations d'authentification
-        $educateur = $this->educateurDAO->getEducateurByEmail($email);
+    public function login() {
+        // Si l'utilisateur est déjà connecté, redirigez-le vers la page d'accueil des éducateurs
+        session_start();
+        if (isset($_SESSION['email'])) {
+           // header('Location:EducateurController.php');
+            exit();
+        }
 
-        if ($educateur && password_verify($motDePasse, $educateur->getMotDePasse())) {
-            // Authentification réussie
-            $_SESSION['user'] = $educateur; // Stockez l'utilisateur dans la session
-            return true;
-        } else {
-            // Authentification échouée
-            return false;
+        // Gérer les erreurs de connexion
+        $error = isset($_GET['error']) ? true : false;
+
+        // Inclure la vue pour afficher le formulaire de connexion
+        include('../Views/Authentification/login.php');
+    }
+
+    public function processLogin() {
+        // Si l'utilisateur est déjà connecté, redirigez-le vers la page d'accueil des éducateurs
+        
+        if (isset($_SESSION['email'])) {
+           header('Location:EducateurController.php');
+            exit();
+        }
+    
+        // Gérer les données du formulaire de connexion
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = $_POST['email'];
+            $motDePasse = $_POST['mot_de_passe'];
+            session_start();
+    
+            try {
+                $educateur = $this->educateurDAO->getEducateurByEmail($email);
+                //password_verify($motDePasse, $educateur->getMotDePasse())
+    
+                if ($educateur && $motDePasse === $educateur->getMotDePasse() && $educateur->getEstAdministrateur()) {
+                    // Authentification réussie, enregistrez les informations de l'éducateur dans la session
+                    $_SESSION['id'] = $educateur->getId();
+                    $_SESSION['email'] = $educateur->getEmail();
+    
+                    // Rediriger vers la page d'accueil des éducateurs
+                     header('Location:EducateurController.php');
+                    exit();
+                } else {
+                    // Authentification échouée ou non-administrateur, rediriger vers le formulaire de connexion avec un message d'erreur
+                   
+                    header('Location:../Views/Authentification/login.php?error=1');
+                    
+                    exit();
+                }
+            } catch (Exception $e) {
+                // Loguer ou afficher l'erreur
+                echo $e->getMessage();
+                // Gérer l'erreur de manière appropriée, par exemple, rediriger avec un message d'erreur
+                header('Location: ../Views/Authentification/login.php?error=1');
+               
+                exit();
+            }
         }
     }
+    
 
-    public function logout()
-    {
-        // Déconnectez l'utilisateur en détruisant la session
+    public function logout() {
+        // Déconnexion : détruire la session et rediriger vers la page de connexion
+        session_start();
         session_destroy();
-        header('Location: /'); // Redirigez l'utilisateur vers la page d'accueil par exemple
+        header('Location: login.php');
+        exit();
     }
-
-    public function isAdmin()
-    {
-        // Vérifiez si l'utilisateur est un administrateur
-        
-        return isset($_SESSION['user']) && $_SESSION['user']->isAdmin();
-    }
-
-    // Ajoutez d'autres méthodes d'authentification ou de gestion des sessions au besoin
 }
+require_once("../../config/database.php");
+require_once("../Models/Connexion.php");
+require_once("../DAO/EducateurDAO.php");
+
+$educateurDAO = new EducateurDAO(new Connexion());
+$controller = new AuthController($educateurDAO);
+
+// Gérer les actions du formulaire
+
+if (!isset($_POST['action'])) {
+    $controller->index();
+} else {
+    $controller->processLogin();
+}
+?>
