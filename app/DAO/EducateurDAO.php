@@ -104,7 +104,38 @@ class EducateurDAO {
             return null;
         }
     }
+
+    public function getEducateurByEmail($email) {
+        try {
+            // Récupérer les informations de l'éducateur avec l'ID spécifié
+            $stmt = $this->connexion->pdo->prepare("SELECT * FROM educateurs WHERE email = ?");
+            $stmt->execute([$email]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            if ($result) {
+                // Récupérer l'objet Licencie associé à l'éducateur
+                $licencieDAO = new LicencieDAO($this->connexion);
+                $licencie = $licencieDAO->getLicencieById($result['licencie_id']);
+    
+                return new Educateur(
+                    $result['id'],
+                    $result['email'],
+                    $result['mot_de_passe'],
+                    $result['est_administrateur'],
+                    $licencie
+                );
+            }
+    
+            return null;
+        } catch (PDOException $e) {
+            // Loguer ou afficher l'erreur pour débogage
+            echo $e->getMessage();
+            // Lancer une exception ou prendre d'autres mesures appropriées
+            throw $e;
+        }
+    }
 }
 
 require_once(__DIR__ . "/../Models/Licencie.php");
 require_once(__DIR__ . "/LicencieDAO.php");
+require_once(__DIR__ . '/../Models/Educateur.php');

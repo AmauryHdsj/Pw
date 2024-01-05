@@ -1,3 +1,3 @@
 <?php
 
-header("Location:app/Controllers/EducateurController.php");
+header("Location:app/Views/Authentification/login.php");

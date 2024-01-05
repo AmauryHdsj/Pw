@@ -21,10 +21,10 @@
 
     <!-- Radio bouton pour est_administrateur -->
 <label for="est_administrateur">Administrateur :</label>
-<input type="radio" id="est_administrateur_oui" name="est_administrateur" value="1" <?php if ($educateur->getEstAdministrateur()) echo "checked"; ?>>
+<input type="radio" id="est_administrateur_oui" name="est_administrateur" value="1"> 
 <label for="est_administrateur_oui">Oui</label>
 
-<input type="radio" id="est_administrateur_non" name="est_administrateur" value="0" <?php if (!$educateur->getEstAdministrateur()) echo "checked"; ?>>
+<input type="radio" id="est_administrateur_nom" name="est_administrateur" value="0">
 <label for="est_administrateur_non">Non</label>
 <br>
 
