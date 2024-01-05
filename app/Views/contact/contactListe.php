@@ -27,7 +27,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <?php include '/Views/templates/sidebar.php' ; ?>
+        <?php include_once '../Views/templates/sidebar.php' ; ?>
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
