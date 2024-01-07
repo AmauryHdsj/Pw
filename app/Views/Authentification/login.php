@@ -37,7 +37,6 @@
         </button>
     </form>
 
-    <p class="mt-4 text-sm text-gray-600 text-center">Pas encore membre? <a href="#" class="text-blue-500">Inscrivez-vous ici</a></p>
 </div>
 
 </body>

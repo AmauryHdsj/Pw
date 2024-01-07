@@ -42,7 +42,7 @@ class AuthController {
                     // Authentification réussie, enregistrez les informations de l'éducateur dans la session
                     $_SESSION['id'] = $educateur->getId();
                     $_SESSION['email'] = $educateur->getEmail();
-                    $licence = $educateur->getLicencie();
+
 
                     // Rediriger vers la page d'accueil des éducateurs
                     header('Location: EducateurController.php');

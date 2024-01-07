@@ -9,15 +9,14 @@ class EducateurDAO {
 
     public function createEducateur(Educateur $educateur) {
         try {
-            // Générer un sel aléatoire
-            $salt = bin2hex(random_bytes(16));
+
 
             // Hacher le mot de passe avec le sel
-            $hashedPassword = password_hash($educateur->getMotDePasse() . $salt, PASSWORD_BCRYPT);
+            $hashedPassword = password_hash($educateur->getMotDePasse() , PASSWORD_BCRYPT);
 
             // Insérer l'éducateur dans la table educateurs et récupérer l'ID généré
-            $stmt = $this->connexion->pdo->prepare("INSERT INTO educateurs (email, mot_de_passe, est_administrateur, licencie_id, salt) VALUES (?, ?, ?, ?, ?)");
-            $stmt->execute([$educateur->getEmail(), $hashedPassword, $educateur->getEstAdministrateur(), $educateur->getLicencie()->getId(), $salt]);
+            $stmt = $this->connexion->pdo->prepare("INSERT INTO educateurs (email, mot_de_passe, est_administrateur, licencie_id) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$educateur->getEmail(), $hashedPassword, $educateur->getEstAdministrateur(), $educateur->getLicencie()->getId()]);
 
             $educateur->setId($this->connexion->pdo->lastInsertId());
             return true;
@@ -28,32 +27,23 @@ class EducateurDAO {
     }
 
 
+
     public function updateEducateur(Educateur $educateur) {
         try {
-            // Récupérer le sel associé à l'utilisateur depuis la base de données
-            $stmt = $this->connexion->pdo->prepare("SELECT salt FROM educateurs WHERE id = ?");
-            $stmt->execute([$educateur->getId()]);
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            // Hacher le nouveau mot de passe avec password_hash
+            $hashedPassword = password_hash($educateur->getMotDePasse(), PASSWORD_BCRYPT);
 
-            if ($result) {
-                $salt = $result['salt'];
+            // Mettre à jour les informations de l'éducateur dans la base de données
+            $stmt = $this->connexion->pdo->prepare("UPDATE educateurs SET email=?, mot_de_passe=?, est_administrateur=?, licencie_id=? WHERE id=?");
+            $stmt->execute([$educateur->getEmail(), $hashedPassword, $educateur->getEstAdministrateur(), $educateur->getLicencie()->getId(), $educateur->getId()]);
 
-                // Hacher le nouveau mot de passe avec le sel existant
-                $hashedPassword = password_hash($educateur->getMotDePasse() . $salt, PASSWORD_BCRYPT);
-
-                // Mettre à jour les informations de l'éducateur dans la base de données
-                $stmt = $this->connexion->pdo->prepare("UPDATE educateurs SET email=?, mot_de_passe=?, est_administrateur=?, licencie_id=? WHERE id=?");
-                $stmt->execute([$educateur->getEmail(), $hashedPassword, $educateur->getEstAdministrateur(), $educateur->getLicencie()->getId(), $educateur->getId()]);
-
-                return true;
-            }
-
-            return false; // Gérer le cas où l'utilisateur n'est pas trouvé
+            return true;
         } catch (PDOException $e) {
             // Gérer l'erreur
             return false;
         }
     }
+
 
 
     public function deleteEducateur(Educateur $educateur) {
