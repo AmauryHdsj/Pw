@@ -43,7 +43,7 @@ class AuthController {
                     // Authentification réussie, enregistrez les informations de l'éducateur dans la session
                     $_SESSION['id'] = $educateur->getId();
                     $_SESSION['email'] = $educateur->getEmail();
-
+                    $_SESSION['prenom'] = $educateur->getLicencie()->getPrenom();
                     // Rediriger vers la page d'accueil des éducateurs
                     header('Location:EducateurController.php');
                     exit();
@@ -66,7 +66,7 @@ class AuthController {
         // Déconnexion : détruire la session et rediriger vers la page de connexion
         session_start();
         session_destroy();
-        header('Location: login.php');
+        header('Location: ../Views/Authentification/login.php');
         exit();
     }
 }
@@ -80,8 +80,11 @@ $controller = new AuthController($educateurDAO);
 
 // Gérer les actions du formulaire
 if (!isset($_POST['action'])) {
-    $controller->index();
+    header('Location:index.php');
 } else {
     $controller->processLogin();
 }
-?>
+
+if (isset($_GET['action']) && $_GET['action'] === 'logout') {
+$controller->logout();
+}

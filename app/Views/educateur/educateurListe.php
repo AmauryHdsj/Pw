@@ -2,7 +2,9 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
+<?php
+session_start();
+?>
 <head>
 
     <meta charset="utf-8">
@@ -113,9 +115,9 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                                <img class="../../public/img/-profile rounded-circle"
-                                    src="../../public/img//undraw_profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                    <?php echo isset($_SESSION['prenom']) ? $_SESSION['prenom'] : 'error'; ?></span>
+                                <a href="AuthController.php?action=logout">Déconnexion</a>
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -172,7 +174,7 @@
                     </td>
                 </tr>
             <?php endforeach; ?>
- 
+
                                     </tbody>
                                 </table>
                             </div>
