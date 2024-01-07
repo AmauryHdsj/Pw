@@ -10,12 +10,13 @@ class ContactDAO {
     public function createContact(Contact $contact) {
         try {
             $stmt = $this->connexion->pdo->prepare("INSERT INTO contacts (nom, prenom, email, numero_tel) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$contact->getNom(), $contact->getPrenom(), $contact->getEmail(), $contact->getNumero()]);
-        return true;
+            $stmt->execute([$contact->getNom(), $contact->getPrenom(), $contact->getEmail(), $contact->getNumero()]);
+            return true;
         } catch (PDOException $e) {
-            die("Erreur de la fonction createContact=" . $e->getMessage());
+            die("Erreur de la fonction createContact : " . $e->getMessage());
         }
     }
+
     public function getById($id) {
         try {
             $stmt = $this->connexion->pdo->prepare("SELECT * FROM contacts WHERE id = ?");
@@ -23,12 +24,12 @@ class ContactDAO {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($row) {
-                return new Contact($row['id'],$row['nom'], $row['prenom'], $row['email'], $row['numero_tel']);
+                return new Contact($row['id'], $row['nom'], $row['prenom'], $row['email'], $row['numero_tel']);
             } else {
-                return null; // Aucun contact trouvÃ© avec cet ID
+                return null; // Aucun contact trouvé avec cet ID
             }
         } catch (PDOException $e) {
-            // GÃ©rer les erreurs de rÃ©cupÃ©ration ici
+            // Gérer les erreurs de récupération ici
             return null;
         }
     }
@@ -39,7 +40,7 @@ class ContactDAO {
             $stmt->execute([$contact->getNom(), $contact->getPrenom(), $contact->getEmail(), $contact->getNumero(), $contact->getId()]);
             return true;
         } catch (PDOException $e) {
-            // GÃ©rer les erreurs de mise Ã  jour ici
+            // Gérer les erreurs de mise à jour ici
             return false;
         }
     }
@@ -50,11 +51,10 @@ class ContactDAO {
             $stmt->execute([$id]);
             return true;
         } catch (PDOException $e) {
-            // GÃ©rer les erreurs de suppression ici
+            // Gérer les erreurs de suppression ici
             return false;
         }
     }
-    
 
     public function listContacts() {
         try {
@@ -62,14 +62,13 @@ class ContactDAO {
             $contacts = [];
 
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $contacts[] = new Contact($row['id'],$row['nom'], $row['prenom'], $row['email'], $row['numero_tel']);
+                $contacts[] = new Contact($row['id'], $row['nom'], $row['prenom'], $row['email'], $row['numero_tel']);
             }
 
             return $contacts;
         } catch (PDOException $e) {
-            // GÃ©rer les erreurs de rÃ©cupÃ©ration ici
+            // Gérer les erreurs de récupération ici
             return [];
         }
-    
     }
 }

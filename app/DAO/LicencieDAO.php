@@ -63,7 +63,6 @@ class LicencieDAO {
                     $categorie
                 );
 
-                //$licencie->setId($row['id']);
                 $licencies[] = $licencie;
             }
 
@@ -96,7 +95,6 @@ class LicencieDAO {
                     $categorie
                 );
 
-                //$licencie->setId($result['id']);
                 return $licencie;
             }
 
