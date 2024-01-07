@@ -1,5 +1,8 @@
 <?php
 
+
+use League\Csv\Writer;
+use League\Csv\CannotInsertRecord;
 class LicencieDAO {
     private $connexion;
 
@@ -104,6 +107,95 @@ class LicencieDAO {
             return null;
         }
     }
+
+
+    public function exportLicenciesToCSV() {
+        // Nom du fichier CSV de sortie
+        $csvFileName = 'licencies_export.csv';
+
+        // Ouverture du fichier en écriture avec la bibliothèque league/csv
+        $csvFile = Writer::createFromPath($csvFileName, 'w+');
+
+        // Écriture de l'en-tête CSV
+        $csvFile->insertOne(['ID', 'Numero Licence', 'Nom', 'Prenom', 'Contact ID', 'Categorie ID']);
+
+        // Récupération de la liste des licenciés
+        $licencies = $this->listLicencies();
+
+        // Écriture des données des licenciés dans le fichier CSV
+        foreach ($licencies as $licencie) {
+            $contact = $licencie->getContact();
+            $categorie = $licencie->getCategorie();
+
+            try {
+                $csvFile->insertOne([
+                    $licencie->getId(),
+                    $licencie->getNumeroLicence(),
+                    $licencie->getNom(),
+                    $licencie->getPrenom(),
+                    $contact->getId(),
+                    $categorie->getId()
+                ]);
+            } catch (CannotInsertRecord $e) {
+                // Gérer l'erreur d'insertion
+                echo $e->getMessage();
+            }
+        }
+
+        // Téléchargement du fichier CSV
+        $csvFile->output($csvFileName);
+
+        exit; // Terminer le script après l'exportation pour éviter la sortie HTML supplémentaire
+    }
+
+
+
+    public function importLicenciesFromCSV($csvFile) {
+        // Ouverture du fichier CSV en lecture
+        $csvHandle = fopen($csvFile, 'r');
+
+        if ($csvHandle !== false) {
+            // Ignorer l'en-tête CSV
+            fgetcsv($csvHandle);
+
+            // Boucle pour lire chaque ligne du fichier CSV
+            while (($data = fgetcsv($csvHandle)) !== false) {
+                // Récupérer les données de la ligne CSV
+                $id = $data[0];
+                $numeroLicence = $data[1];
+                $nom = $data[2];
+                $prenom = $data[3];
+                $contactId = $data[4];
+                $categorieId = $data[5];
+
+                // Créer un nouvel objet Licencie avec les données du CSV
+                $licencie = new Licencie($id, $numeroLicence, $nom, $prenom,$contactId,$categorieId);
+
+                // Appeler la méthode du modèle (LicencieDAO) pour ajouter le licencié
+                $this->createLicencieCSV($licencie);
+            }
+
+            // Fermer le fichier CSV
+            fclose($csvHandle);
+
+            return true;
+        }
+
+        return false;
+    }
+    public function createLicencieCSV(Licencie $licencie) {
+        try {
+            $stmt = $this->connexion->pdo->prepare("INSERT INTO licencies (numero_licence, nom, prenom, contact_id, categorie_id) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$licencie->getNumeroLicence(), $licencie->getNom(), $licencie->getPrenom(), $licencie->getContact(), $licencie->getCategorie()]);
+
+            $licencie->setId($this->connexion->pdo->lastInsertId());
+            return true;
+        } catch (PDOException $e) {
+            // Gérer l'erreur
+            return false;
+        }
+    }
+
 }
 
 require_once(__DIR__ . "/../Models/Contact.php");

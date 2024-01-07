@@ -14,6 +14,28 @@ class LicencieController {
         // Inclure la vue pour afficher la liste des licenciés
         include('../views/licencie/licencieListe.php');
     }
+    public function exportCSV() {
+        $this->licencieDAO->exportLicenciesToCSV();
+    }
+
+    public function importCSV() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csvFile'])) {
+            $csvFile = $_FILES['csvFile']['tmp_name'];
+
+            // Appeler la fonction d'importation
+            $success = $this->licencieDAO->importLicenciesFromCSV($csvFile);
+
+            if ($success) {
+                echo "Importation réussie !";
+            } else {
+                echo "Échec de l'importation.";
+            }
+        } else {
+            // Gérer le cas où le formulaire n'est pas soumis correctement
+            echo "Formulaire non soumis correctement.";
+        }
+    }
+
 }
 
 require_once("../../config/database.php");
@@ -26,6 +48,17 @@ require_once("../DAO/CategorieDAO.php");
 require_once("../DAO/LicencieDAO.php");
 $licencieDAO = new LicencieDAO(new Connexion());
 $controller = new LicencieController($licencieDAO);
+if ( isset($_GET['action']) && $_GET['action'] === 'exportCSV') {
+    $controller->exportCSV();
+}
+if ( isset($_GET['action']) && $_GET['action'] === 'importCSV') {
+    $controller->importCSV();
+}
 $controller->index();
+// Dans le contrôleur LicencieController
 
-?>
+// Dans LicencieController.php
+
+
+
+

@@ -185,6 +185,15 @@
 
                 </div>
                 <!-- /.container-fluid -->
+                <!-- Dans la vue (par exemple, licencieListe.php) -->
+
+                <a href="LicencieController.php?action=exportCSV">Exporter CSV</a>
+                <form action="LicencieController.php?action=importCSV" method="post" enctype="multipart/form-data">
+                    <label for="csvFile">Choisissez un fichier CSV à importer :</label>
+                    <input type="file" name="csvFile" accept=".csv">
+                    <input type="submit" value="Importer">
+                </form>
+
 
             </div>
             <!-- End of Main Content -->
