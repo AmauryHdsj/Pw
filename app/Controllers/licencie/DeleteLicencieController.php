@@ -1,4 +1,7 @@
 <?php
+
+use DAO\LicencieDAO;
+
 class DeleteLicencieController {
     private $licencieDAO;
 

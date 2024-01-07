@@ -1,13 +1,21 @@
 <?php
 
-class LicencieDAO {
+namespace DAO;
+
+use Connexion;
+use Licencie;
+
+class LicencieDAO
+{
     private $connexion;
 
-    public function __construct(Connexion $connexion) {
+    public function __construct(Connexion $connexion)
+    {
         $this->connexion = $connexion;
     }
 
-    public function createLicencie(Licencie $licencie) {
+    public function createLicencie(Licencie $licencie)
+    {
         try {
             $stmt = $this->connexion->pdo->prepare("INSERT INTO licencies (numero_licence, nom, prenom, contact_id, categorie_id) VALUES (?, ?, ?, ?, ?)");
             $stmt->execute([$licencie->getNumeroLicence(), $licencie->getNom(), $licencie->getPrenom(), $licencie->getContact()->getId(), $licencie->getCategorie()->getId()]);
@@ -20,7 +28,8 @@ class LicencieDAO {
         }
     }
 
-    public function setLicencie(Licencie $licencie) {
+    public function setLicencie(Licencie $licencie)
+    {
         try {
             $stmt = $this->connexion->pdo->prepare("UPDATE licencies SET numero_licence=?, nom=?, prenom=?, contact_id=?, categorie_id=? WHERE id=?");
             $stmt->execute([$licencie->getNumeroLicence(), $licencie->getNom(), $licencie->getPrenom(), $licencie->getContact()->getId(), $licencie->getCategorie()->getId(), $licencie->getId()]);
@@ -31,7 +40,8 @@ class LicencieDAO {
         }
     }
 
-    public function removeLicencie(Licencie $licencie) {
+    public function removeLicencie(Licencie $licencie)
+    {
         try {
             $stmt = $this->connexion->pdo->prepare("DELETE FROM licencies WHERE id = ?");
             $stmt->execute([$licencie->getId()]);
@@ -42,7 +52,8 @@ class LicencieDAO {
         }
     }
 
-    public function listLicencies() {
+    public function listLicencies()
+    {
         try {
             $stmt = $this->connexion->pdo->query("SELECT * FROM licencies");
             $licencies = [];
@@ -74,7 +85,8 @@ class LicencieDAO {
         }
     }
 
-    public function getLicencieById($id) {
+    public function getLicencieById($id)
+    {
         try {
             $stmt = $this->connexion->pdo->prepare("SELECT * FROM licencies WHERE id = ?");
             $stmt->execute([$id]);

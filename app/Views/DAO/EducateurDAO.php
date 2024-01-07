@@ -1,15 +1,23 @@
 <?php
 
-class EducateurDAO {
+namespace DAO;
+
+use Connexion;
+use Educateur;
+
+class EducateurDAO
+{
     private $connexion;
 
-    public function __construct(Connexion $connexion) {
+    public function __construct(Connexion $connexion)
+    {
         $this->connexion = $connexion;
     }
 
-    public function createEducateur(Educateur $educateur) {
+    public function createEducateur(Educateur $educateur)
+    {
         try {
-            
+
             // Insérer l'éducateur dans la table educateurs et récupérer l'ID généré
             $stmt = $this->connexion->pdo->prepare("INSERT INTO educateurs (email, mot_de_passe, est_administrateur, licencie_id) VALUES (?, ?, ?, ?)");
             $stmt->execute([$educateur->getEmail(), $educateur->getMotDePasse(), $educateur->getEstAdministrateur(), $educateur->getLicencie()->getId()]);
@@ -22,7 +30,8 @@ class EducateurDAO {
         }
     }
 
-    public function updateEducateur(Educateur $educateur) {
+    public function updateEducateur(Educateur $educateur)
+    {
         try {
             // Mettre à jour les informations de l'éducateur dans la table educateurs
             $stmt = $this->connexion->pdo->prepare("UPDATE educateurs SET email=?, mot_de_passe=?, est_administrateur=?, licencie_id=? WHERE id=?");
@@ -34,7 +43,8 @@ class EducateurDAO {
         }
     }
 
-    public function deleteEducateur(Educateur $educateur) {
+    public function deleteEducateur(Educateur $educateur)
+    {
         try {
             // Supprimer l'éducateur de la table educateurs
             $stmt = $this->connexion->pdo->prepare("DELETE FROM educateurs WHERE id = ?");
@@ -46,7 +56,8 @@ class EducateurDAO {
         }
     }
 
-    public function listEducateurs() {
+    public function listEducateurs()
+    {
         try {
             // Récupérer la liste des éducateurs depuis la table educateurs
             $stmt = $this->connexion->pdo->query("SELECT * FROM educateurs");
@@ -75,7 +86,8 @@ class EducateurDAO {
         }
     }
 
-    public function getEducateurById($id) {
+    public function getEducateurById($id)
+    {
         try {
             // Récupérer les informations de l'éducateur avec l'ID spécifié
             $stmt = $this->connexion->pdo->prepare("SELECT * FROM educateurs WHERE id = ?");
@@ -105,18 +117,19 @@ class EducateurDAO {
         }
     }
 
-    public function getEducateurByEmail($email) {
+    public function getEducateurByEmail($email)
+    {
         try {
             // Récupérer les informations de l'éducateur avec l'ID spécifié
             $stmt = $this->connexion->pdo->prepare("SELECT * FROM educateurs WHERE email = ?");
             $stmt->execute([$email]);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
             if ($result) {
                 // Récupérer l'objet Licencie associé à l'éducateur
                 $licencieDAO = new LicencieDAO($this->connexion);
                 $licencie = $licencieDAO->getLicencieById($result['licencie_id']);
-    
+
                 return new Educateur(
                     $result['id'],
                     $result['email'],
@@ -125,7 +138,7 @@ class EducateurDAO {
                     $licencie
                 );
             }
-    
+
             return null;
         } catch (PDOException $e) {
             // Loguer ou afficher l'erreur pour débogage

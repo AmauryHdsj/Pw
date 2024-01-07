@@ -1,4 +1,9 @@
 <?php
+
+use DAO\CategorieDAO;
+use DAO\ContactDAO;
+use DAO\LicencieDAO;
+
 class AddLicencieController
 {
     private $licencieDAO;

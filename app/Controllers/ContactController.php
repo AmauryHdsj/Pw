@@ -1,4 +1,7 @@
 <?php
+
+use DAO\ContactDAO;
+
 class ContactController {
     private $contactDAO;
 

@@ -1,6 +1,8 @@
 <?php
 
 
+use DAO\EducateurDAO;
+
 class AuthController {
     private $educateurDAO;
 

@@ -1,5 +1,7 @@
 <?php
 
+use DAO\EducateurDAO;
+
 class EducateurController
 {
     private $educateurDAO;

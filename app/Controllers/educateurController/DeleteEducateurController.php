@@ -1,5 +1,7 @@
 <?php
 
+use DAO\EducateurDAO;
+
 class DeleteEducateurController {
     private $educateurDAO;
 

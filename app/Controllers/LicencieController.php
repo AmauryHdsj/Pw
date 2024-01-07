@@ -1,5 +1,7 @@
 <?php
 
+use DAO\LicencieDAO;
+
 class LicencieController {
     private $licencieDAO;
 

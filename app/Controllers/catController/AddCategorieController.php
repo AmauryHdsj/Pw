@@ -1,4 +1,7 @@
 <?php
+
+use DAO\CategorieDAO;
+
 class AddCategorieController
 {
     private $categorieDAO;
