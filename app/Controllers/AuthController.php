@@ -24,9 +24,8 @@ class AuthController {
 
     public function processLogin() {
         // Si l'utilisateur est déjà connecté, redirigez-le vers la page d'accueil des éducateurs
-
         if (isset($_SESSION['email'])) {
-            header('Location:EducateurController.php');
+            header('Location: EducateurController.php');
             exit();
         }
 
@@ -39,17 +38,18 @@ class AuthController {
             try {
                 $educateur = $this->educateurDAO->getEducateurByEmail($email);
 
-                if (password_verify($motDePasse, $educateur->getMotDePasse()) && $educateur->getEstAdministrateur()) {
+                // Vérifier si l'éducateur existe et si le mot de passe correspond
+                if ($educateur && password_verify($motDePasse, $educateur->getMotDePasse()) && $educateur->getEstAdministrateur()) {
                     // Authentification réussie, enregistrez les informations de l'éducateur dans la session
                     $_SESSION['id'] = $educateur->getId();
                     $_SESSION['email'] = $educateur->getEmail();
                     $_SESSION['prenom'] = $educateur->getLicencie()->getPrenom();
                     // Rediriger vers la page d'accueil des éducateurs
-                    header('Location:EducateurController.php');
+                    header('Location: EducateurController.php');
                     exit();
                 } else {
                     // Authentification échouée ou non-administrateur, rediriger vers le formulaire de connexion avec un message d'erreur
-                    header('Location:../Views/Authentification/login.php?error=1');
+                    header('Location: ../Views/Authentification/login.php?error=1');
                     exit();
                 }
             } catch (Exception $e) {
@@ -61,6 +61,7 @@ class AuthController {
             }
         }
     }
+
 
     public function logout() {
         // Déconnexion : détruire la session et rediriger vers la page de connexion
