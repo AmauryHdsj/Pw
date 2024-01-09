@@ -196,6 +196,10 @@
 
             </div>
             <!-- /.container-fluid -->
+            <!-- Dans la vue (par exemple, licencieListe.php) -->
+
+
+
 
         </div>
         <!-- End of Main Content -->
@@ -215,7 +219,6 @@
 
 </div>
 <!-- End of Page Wrapper -->
-
 <!-- Scroll to Top Button-->
 <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
@@ -235,12 +238,36 @@
             <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="AuthController.php?action=logout">Logout</a>
+                <a class="btn btn-primary" href="login.html">Logout</a>
             </div>
         </div>
     </div>
 </div>
+<div id="alert-container" class="position-fixed w-25" style="top: 10px; right: 10px; z-index: 1000;">
+    <?php
 
+    if (isset($_SESSION['import_message'])) {
+        $alertType = ($_SESSION['import_message'] === "Licenciés importés avec succès") ? 'success' : 'danger';
+        echo '<div class="alert alert-' . $alertType . ' alert-dismissible fade show" role="alert">';
+        echo $_SESSION['import_message'];
+        echo '<button type="button" class="close" data-dismiss="alert" aria-label="Close">';
+        echo '<span aria-hidden="true">&times;</span>';
+        echo '</button>';
+        echo '</div>';
+        unset($_SESSION['import_message']); // Effacer la variable de session après l'avoir utilisée
+    }
+    ?>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.alert').on('closed.bs.alert', function () {
+            location.reload(true);
+        });
+    });
+</script>
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- Bootstrap core JavaScript-->
 <script src="../../public/vendor/jquery/jquery.min.js"></script>
 <script src="../../public/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -249,15 +276,20 @@
 <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
 <!-- Custom scripts for all pages-->
-<script src="../../public/js/sb-admin-2.min.js"></script>
+<script src="js/sb-admin-2.min.js"></script>
 
 <!-- Page level plugins -->
-<script src="../../public/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="../../public/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
 <!-- Page level custom scripts -->
-<script src="../../public/js/demo/datatables-demo.js"></script>
+<script src="js/demo/datatables-demo.js"></script>
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+
 
 </body>
-
 </html>
