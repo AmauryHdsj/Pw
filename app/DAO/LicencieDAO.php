@@ -1,8 +1,7 @@
 <?php
 
 
-use League\Csv\Writer;
-use League\Csv\CannotInsertRecord;
+
 class LicencieDAO {
     private $connexion;
 
@@ -113,37 +112,43 @@ class LicencieDAO {
         // Nom du fichier CSV de sortie
         $csvFileName = 'licencies_export.csv';
 
-        // Ouverture du fichier en écriture avec la bibliothèque league/csv
-        $csvFile = Writer::createFromPath($csvFileName, 'w+');
+        // Ouvrir le fichier en écriture
+        $csvFile = fopen($csvFileName, 'w');
 
-        // Écriture de l'en-tête CSV
-        $csvFile->insertOne(['ID', 'Numero Licence', 'Nom', 'Prenom', 'Contact ID', 'Categorie ID']);
+        // Écrire l'en-tête CSV
+        fputcsv($csvFile, ['ID', 'Numero Licence', 'Nom', 'Prenom', 'Contact ID', 'Categorie ID']);
 
-        // Récupération de la liste des licenciés
+        // Récupérer la liste des licenciés
         $licencies = $this->listLicencies();
 
-        // Écriture des données des licenciés dans le fichier CSV
+        // Écrire les données des licenciés dans le fichier CSV
         foreach ($licencies as $licencie) {
             $contact = $licencie->getContact();
             $categorie = $licencie->getCategorie();
 
-            try {
-                $csvFile->insertOne([
-                    $licencie->getId(),
-                    $licencie->getNumeroLicence(),
-                    $licencie->getNom(),
-                    $licencie->getPrenom(),
-                    $contact->getId(),
-                    $categorie->getId()
-                ]);
-            } catch (CannotInsertRecord $e) {
-                // Gérer l'erreur d'insertion
-                echo $e->getMessage();
-            }
+            $data = [
+                $licencie->getId(),
+                $licencie->getNumeroLicence(),
+                $licencie->getNom(),
+                $licencie->getPrenom(),
+                $contact->getId(),
+                $categorie->getId()
+            ];
+
+            // Écrire la ligne dans le fichier CSV
+            fputcsv($csvFile, $data);
         }
 
+        // Fermer le fichier CSV
+        fclose($csvFile);
+
         // Téléchargement du fichier CSV
-        $csvFile->output($csvFileName);
+        header('Content-Type: application/csv');
+        header('Content-Disposition: attachment; filename="' . $csvFileName . '"');
+        readfile($csvFileName);
+
+        // Supprimer le fichier CSV après le téléchargement
+        unlink($csvFileName);
 
         exit; // Terminer le script après l'exportation pour éviter la sortie HTML supplémentaire
     }
