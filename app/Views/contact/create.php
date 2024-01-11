@@ -55,7 +55,7 @@
                                 
                                     <input  class="btn btn-primary btn-user btn-block" type="submit" name="action" value="Ajouter">
                                     <hr>
-                                    <a class="btn btn-google btn-user btn-block" href="../ContactController.php">Retour à la liste des Catégories</a>
+                                    <a class="btn btn-google btn-user btn-block" href="../ContactController.php">Retour à la liste des Contacts</a>
 
                                 </form>
 
