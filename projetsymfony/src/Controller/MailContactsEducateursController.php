@@ -12,7 +12,9 @@ use App\Repository\ContactsRepository;
 use App\Repository\EducateursRepository;
 use App\Repository\CategoriesRepository;
 use App\Repository\MailContactRepository;
-
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class MailContactsEducateursController extends AbstractController
 {
@@ -49,7 +51,7 @@ class MailContactsEducateursController extends AbstractController
     public function deleteMailEducateur(Request $request): Response {
         $id=$request->query->get('id');
         $this->mailContactRepository->delete($id);
-        return $this->redirectToRoute('app_mail_edu_educateurs');
+        return $this->redirectToRoute('app_mail_contacts_educateurs');
     }
 
     #[Route(path: '/mail/contact/send', name: 'app_send_mail_contact')]
