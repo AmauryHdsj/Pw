@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\EducateursRepository;
 use App\Repository\MailEduRepository;
 
-class MailEduEducateurController extends AbstractController
+class MailEduEducateursController extends AbstractController
 {
 
     private MailEduRepository $mailEduRepository;
