@@ -17,7 +17,7 @@ class MailEdu
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $date_denvoie = null;
+    private ?\DateTimeInterface $date_envoie = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $objet = null;
@@ -43,12 +43,12 @@ class MailEdu
 
     public function getDateDenvoie(): ?\DateTimeInterface
     {
-        return $this->date_denvoie;
+        return $this->date_envoie;
     }
 
-    public function setDateDenvoie(\DateTimeInterface $date_denvoie): static
+    public function setDateDenvoie(\DateTimeInterface $date_envoie): static
     {
-        $this->date_denvoie = $date_denvoie;
+        $this->date_envoie = $date_envoie;
 
         return $this;
     }
@@ -112,4 +112,6 @@ class MailEdu
 
         return $this;
     }
+
+
 }
