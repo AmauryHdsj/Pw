@@ -2,47 +2,61 @@
 
 namespace App\Controller;
 
-use App\Entity\MailEdu;
-use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\ContactsRepository;
 use App\Repository\EducateursRepository;
-use App\Repository\MailEduRepository;
+use App\Repository\CategoriesRepository;
+use App\Repository\MailContactRepository;
+
 
 class MailContactsEducateursController extends AbstractController
 {
 
-    private MailEduRepository $mailEduRepository;
+
+    private MailContactRepository $mailContactRepository;
+    private ContactsRepository $contactRepository;
     private  EducateursRepository $educateursRepository;
+    private CategoriesRepository $categorieRepository;
 
 
-    public function  __construct(
-        EducateursRepository $educateursRepository, MailEduRepository $mailEduRepository){
-        $this->mailEduRepository=$mailEduRepository;
+    public function  __construct(CategoriesRepository $categorieRepository,EducateursRepository $educateursRepository,MailContactRepository $mailContactRepository,ContactsRepository $contactRepository){
+        $this->mailContactRepository=$mailContactRepository;
+        $this->contactRepository=$contactRepository;
+        $this->categorieRepository=$categorieRepository;
         $this->educateursRepository=$educateursRepository;
-
     }
 
-    #[Route('/mail/edu/educateurs', name: 'app_mail_edu_educateurs')]
+    #[Route('/mail/contacts/educateurs', name: 'app_mail_contacts_educateurs')]
     public function index(): Response
     {
         $userId = $this->getUser()->getId();
-        $mails = $this->mailEduRepository->getEduById($userId);
-        return $this->render('mail_educateur/index.html.twig', ["mails" => $mails]);
+        $mails = $this->mailContactRepository->findContact($userId);
+        return $this->render('mail_contacts_educateurs/index.html.twig', [
+            'mails' => $mails,
+        ]);
+
     }
 
+    #[Route('/mail/contact/delete/', name: 'app_mail_contact_delete')]
+    public function delete(Request $request): Response
+    {
+        $id=$request->query->get('id');
+        $this->mailContactRepository->delete($id);
+        return $this->redirectToRoute('app_mail_contact');
+    }
 
-    #[Route(path: '/mail/send', name: 'app_send_mail_educateur')]
-    public function sendMailEducateur(Request $request): Response {
-        $educateurs = $this->educateursRepository->findAll();
-        $form = $this->createFormBuilder()->add('objet', TextType::class, [
-            'label' => 'Objet: ',
-            'required' => true,
-            'attr' => [
-                'placeholder' => 'Objet...',
-            ]])
+    #[Route(path: '/mail/contact/send', name: 'app_send_mail_contact')]
+    public function add(Request $request): Response {
+        $categories = $this->categorieRepository->findAll();
+        $form = $this->createFormBuilder()
+            ->add('objet', TextType::class, [
+                'label' => 'Objet: ',
+                'required' => true,
+                'attr' => [
+                    'placeholder' => 'Objet...',
+                ]])
             ->add('message', TextareaType::class, [
                 'required' => true,
                 'label' => 'Message: ',
@@ -51,8 +65,8 @@ class MailContactsEducateursController extends AbstractController
                 ]])
             ->add('destinataire', ChoiceType::class, [
                 'label' => 'Destinataire: ',
-                'choices' => $educateurs,
-                'choice_label' => 'email',
+                'choices' => $categories,
+                'choice_label' => 'nom',
                 'choice_value' => 'id',
                 'multiple' => true,
                 'expanded' => false,
@@ -60,31 +74,27 @@ class MailContactsEducateursController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $mail  = new MailEdu();
+            $mail  = new MailContact();
             $mail->setObjet($data['objet']);
             $mail->setMessage($data['message']);
             $now = new DateTime();
-            $mail->setDateEnvoi($now);
+            $mail->setDateEnvoie($now);
             $userId = $this->getUser()->getId();
             $expediteur = $this->educateursRepository->findOneBy(['id'=> $userId]);
             $mail->setExpediteur($expediteur);
-            foreach ($data['destinataire'] as $value) {
-                $mail->addDestinataire($value);
+            foreach ($data['destinataire'] as $categorie) {
+                $contacts = $this->contactRepository->getContactByCategorie($categorie->getId());
+                foreach ($contacts as $value) {
+                    $mail->addDestinataire($value);
+                }
             }
-            $this->mailEduRepository->add($mail);
-            return $this->redirectToRoute('app_mail_educateur');
+            $this->mailContactRepository->send($mail);
+            return $this->redirectToRoute('app_mail_contact');
         }
-        return $this->render('mail_educateur/addMessageEducateur.html.twig', [
+
+        return $this->render('mail_contact/add.html.twig', [
             'form'=>$form->createView()
         ]);
     }
-
-    #[Route(path: '/mail/delete', name: 'app_delete_mail_educateur')]
-    public function deleteMailEducateur(Request $request): Response {
-        $id = $request->query->get('id');
-        $this->mailEduRepository->delete($id);
-        return $this->redirectToRoute('app_mail_educateur');
-    }
-
 
 }
