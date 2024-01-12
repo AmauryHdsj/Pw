@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
+use DateTime;
+use App\Entity\MailContact;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -9,6 +12,12 @@ use App\Repository\ContactsRepository;
 use App\Repository\EducateursRepository;
 use App\Repository\CategoriesRepository;
 use App\Repository\MailContactRepository;
+use App\Entity\Educateurs;
+
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormFactoryInterface;
 
 
 class MailContactsEducateursController extends AbstractController
@@ -78,21 +87,21 @@ class MailContactsEducateursController extends AbstractController
             $mail->setObjet($data['objet']);
             $mail->setMessage($data['message']);
             $now = new DateTime();
-            $mail->setDateEnvoie($now);
+            $mail->setDateDenvoie($now);
             $userId = $this->getUser()->getId();
             $expediteur = $this->educateursRepository->findOneBy(['id'=> $userId]);
             $mail->setExpediteur($expediteur);
             foreach ($data['destinataire'] as $categorie) {
-                $contacts = $this->contactRepository->getContactByCategorie($categorie->getId());
+                $contacts = $this->contactRepository->findContactsByCategorie($categorie->getId());
                 foreach ($contacts as $value) {
                     $mail->addDestinataire($value);
                 }
             }
-            $this->mailContactRepository->send($mail);
-            return $this->redirectToRoute('app_mail_contact');
+            $this->mailContactRepository->add($mail);
+            return $this->redirectToRoute('app_mail_contacts_educateurs');
         }
 
-        return $this->render('mail_contact/add.html.twig', [
+        return $this->render('mail_contacts_educateurs/add.html.twig', [
             'form'=>$form->createView()
         ]);
     }

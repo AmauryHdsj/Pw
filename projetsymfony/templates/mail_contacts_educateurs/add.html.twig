@@ -1,0 +1,33 @@
+{% block title %}Envoyer un mail{% endblock %}
+
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h1 class="text-center mb-4">Envoyer un mail</h1>
+
+                {{ form_start(form) }}
+
+                <div class="mb-3">
+                    {{ form_label(form.objet, 'Objet du mail', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.objet, {'attr': {'class': 'form-control', 'placeholder': 'Objet du mail'}}) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.message, 'Votre message', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.message, {'attr': {'class': 'form-control', 'placeholder': 'Votre message'}}) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(form.destinataire, 'Destinataire', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.destinataire, {'attr': {'class': 'form-control', 'placeholder': 'Destinataire'}}) }}
+                </div>
+
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

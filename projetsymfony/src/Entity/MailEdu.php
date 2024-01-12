@@ -26,6 +26,7 @@ class MailEdu
     private ?string $message = null;
 
     #[ORM\ManyToMany(targetEntity: Educateurs::class, inversedBy: 'mailedureçu')]
+    #[ORM\JoinTable(name: 'mail_edu_educateur')]
     private Collection $destinataire;
 
     #[ORM\ManyToOne(inversedBy: 'maileduenvoye')]

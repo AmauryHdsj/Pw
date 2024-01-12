@@ -59,11 +59,12 @@ public function findContact($id)
 public function add(MailContact $mailContact): void
 {
     try {
-        $this->_em->persist($mailContact);
-        $this->_em->flush();
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($mailContact);
+        $entityManager->flush();
     } catch (\Exception $e) {
         // Handle the exception
-        echo "An error occurred while sending the mail: " . $e->getMessage();
+        echo "Erreur lors de l'envoie du message: " . $e->getMessage();
     }
 }
 

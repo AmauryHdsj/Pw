@@ -49,12 +49,14 @@ class MailEduRepository extends ServiceEntityRepository
 public function add(MailEdu $mailEducateur): void
 {
     try {
-        $this->_em->persist($mailEducateur);
-        $this->_em->flush();
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($mailEducateur);
+        $entityManager->flush();
     } catch (\Exception $e) {
         // Handle the exception
-        echo "An error occurred while sending the mail: " . $e->getMessage();
+        echo "Erreur lors de l'envoie du message: " . $e->getMessage();
     }
+    
 }
 
 

@@ -7,8 +7,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\EducateursRepository;
 use App\Repository\MailEduRepository;
+use Symfony\Component\HttpFoundation\Request;
+use DateTime;
+use App\Repository\CategoriesRepository;
+use App\Repository\MailContactRepository;
+use App\Entity\Educateurs;
+use App\Entity\MailEdu;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormFactoryInterface;
 
-class MailEduEducateursController extends AbstractController
+class MailEduEducateurController extends AbstractController
 {
 
     private MailEduRepository $mailEduRepository;
@@ -27,7 +37,7 @@ class MailEduEducateursController extends AbstractController
     {
         $userId = $this->getUser()->getId();
         $mails = $this->mailEduRepository->getEduById($userId);
-        return $this->render('mail_educateur/index.html.twig', ["mails" => $mails]);
+        return $this->render('mail_edu_educateur/index.html.twig', ["mails" => $mails]);
     }
 
 
@@ -41,19 +51,19 @@ class MailEduEducateursController extends AbstractController
                 'placeholder' => 'Objet...',
             ]])
             ->add('message', TextareaType::class, [
-                'required' => true,
-                'label' => 'Message: ',
-                'attr' => [
-                    'placeholder' => 'Entrer votre message ici..',
-                ]])
+            'required' => true,
+            'label' => 'Message: ',
+            'attr' => [
+                'placeholder' => 'Entrer votre message ici..',
+            ]])
             ->add('destinataire', ChoiceType::class, [
-                'label' => 'Destinataire: ',
-                'choices' => $educateurs,
-                'choice_label' => 'email',
-                'choice_value' => 'id',
-                'multiple' => true,
-                'expanded' => false,
-            ])->getForm();
+            'label' => 'Destinataire: ',
+            'choices' => $educateurs,
+            'choice_label' => 'email',
+            'choice_value' => 'id',
+            'multiple' => true,
+            'expanded' => false,
+        ])->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
@@ -61,7 +71,7 @@ class MailEduEducateursController extends AbstractController
             $mail->setObjet($data['objet']);
             $mail->setMessage($data['message']);
             $now = new DateTime();
-            $mail->setDateEnvoi($now);
+            $mail->setDateDenvoie($now);
             $userId = $this->getUser()->getId();
             $expediteur = $this->educateursRepository->findOneBy(['id'=> $userId]);
             $mail->setExpediteur($expediteur);
@@ -69,9 +79,9 @@ class MailEduEducateursController extends AbstractController
                 $mail->addDestinataire($value);
             }
             $this->mailEduRepository->add($mail);
-            return $this->redirectToRoute('app_mail_educateur');
+            return $this->redirectToRoute('app_mail_edu_educateurs');
         }
-        return $this->render('mail_educateur/addMessageEducateur.html.twig', [
+        return $this->render('mail_edu_educateur/add.html.twig', [
             'form'=>$form->createView()
         ]);
     }
