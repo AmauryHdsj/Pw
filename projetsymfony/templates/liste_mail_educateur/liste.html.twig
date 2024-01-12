@@ -27,7 +27,7 @@
                     <td>{{ mail.expediteur.email }}</td>
                     <td>
                         <a href="{{ path('delete_mail', {'id': mail.id}) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce mail ?')">Supprimer</a>
-                        <a href="{{ path('view_mail', {'id': mail.id}) }}">Voir détails</a>
+
                     </td>
                 </tr>
             {% endfor %}

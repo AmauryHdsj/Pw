@@ -2,13 +2,16 @@
 
 namespace App\Controller;
 
+use App\Repository\MailContactRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\EducateursRepository;
 use App\Repository\MailEduRepository;
+use Symfony\Component\HttpFoundation\Request;
 
-class MailEduEducateursController extends AbstractController
+class MailEduEducateurController extends AbstractController
 {
 
     private MailEduRepository $mailEduRepository;
@@ -27,9 +30,8 @@ class MailEduEducateursController extends AbstractController
     {
         $userId = $this->getUser()->getId();
         $mails = $this->mailEduRepository->getEduById($userId);
-        return $this->render('mail_educateur/index.html.twig', ["mails" => $mails]);
+        return $this->render('mail_edu_educateur/index.html.twig', ["mails" => $mails]);
     }
-
 
     #[Route(path: '/mail/send', name: 'app_send_mail_educateur')]
     public function sendMailEducateur(Request $request): Response {
@@ -78,9 +80,9 @@ class MailEduEducateursController extends AbstractController
 
     #[Route(path: '/mail/delete', name: 'app_delete_mail_educateur')]
     public function deleteMailEducateur(Request $request): Response {
-        $id = $request->query->get('id');
+        $id=$request->query->get('id');
         $this->mailEduRepository->delete($id);
-        return $this->redirectToRoute('app_mail_educateur');
+        return $this->redirectToRoute('app_mail_edu_educateurs');
     }
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -9,6 +10,7 @@ use App\Repository\ContactsRepository;
 use App\Repository\EducateursRepository;
 use App\Repository\CategoriesRepository;
 use App\Repository\MailContactRepository;
+use Symfony\Component\HttpFoundation\Request;
 
 
 class MailContactsEducateursController extends AbstractController
@@ -19,6 +21,7 @@ class MailContactsEducateursController extends AbstractController
     private ContactsRepository $contactRepository;
     private  EducateursRepository $educateursRepository;
     private CategoriesRepository $categorieRepository;
+
 
 
     public function  __construct(CategoriesRepository $categorieRepository,EducateursRepository $educateursRepository,MailContactRepository $mailContactRepository,ContactsRepository $contactRepository){
@@ -39,12 +42,13 @@ class MailContactsEducateursController extends AbstractController
 
     }
 
-    #[Route('/mail/contact/delete/', name: 'app_mail_contact_delete')]
-    public function delete(Request $request): Response
-    {
+
+
+    #[Route('/mail/contact/delete', name: 'app_mail_contact_delete')]
+    public function deleteMailEducateur(Request $request): Response {
         $id=$request->query->get('id');
         $this->mailContactRepository->delete($id);
-        return $this->redirectToRoute('app_mail_contact');
+        return $this->redirectToRoute('app_mail_edu_educateurs');
     }
 
     #[Route(path: '/mail/contact/send', name: 'app_send_mail_contact')]

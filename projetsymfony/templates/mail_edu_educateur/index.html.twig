@@ -1,20 +1,39 @@
-{% extends 'base.html.twig' %}
+{# templates/mail_educateur/index.html.twig #}
 
-{% block title %}Hello MailEduEducateurController!{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Mails Éducateurs</title>
+</head>
+<body>
+<h1>Liste des Mails Éducateurs</h1>
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<table>
+    <thead>
+    <tr>
+        <th>Objet</th>
+        <th>Message</th>
+        <th>Date d'Envoi</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for mail in mails %}
+        <tr>
+            <td>{{ mail.objet }}</td>
+            <td>{{ mail.message }}</td>
+            <td>{{ mail.getDateDenvoie|date('Y-m-d H:i:s') }}</td>
+            <td>
+                <a href="{{ path('app_delete_mail_educateur', {'id': mail.id}) }}" onclick="return confirm('Voulez-vous vraiment supprimer ce mail ?')">Supprimer</a>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/amaur/Documents/L3-ISTIC/PW/projetsymfony2/projetsymfony2/projetsymfony/src/Controller/MailEduEducateurController.php'|file_link(0) }}">src/Controller/MailEduEducateurController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/amaur/Documents/L3-ISTIC/PW/projetsymfony2/projetsymfony2/projetsymfony/templates/mail_edu_educateur/index.html.twig'|file_link(0) }}">templates/mail_edu_educateur/index.html.twig</a></code></li>
-    </ul>
-</div>
-{% endblock %}
+<a href="{{ path('app_send_mail_educateur') }}">Envoyer un Mail</a>
+</body>
+</html>
