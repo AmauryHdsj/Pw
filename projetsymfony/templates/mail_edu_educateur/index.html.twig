@@ -1,7 +1,39 @@
-{% extends 'base.html.twig' %}
+{# templates/mail_educateur/index.html.twig #}
 
-{% block title %}Hello MailEduEducateurController!{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Mails Éducateurs</title>
+</head>
+<body>
+<h1>Liste des Mails Éducateurs</h1>
 
-{% block body %}
-bonjours
-{% endblock %}
+<table>
+    <thead>
+    <tr>
+        <th>Objet</th>
+        <th>Message</th>
+        <th>Date d'Envoi</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for mail in mails %}
+        <tr>
+            <td>{{ mail.objet }}</td>
+            <td>{{ mail.message }}</td>
+            <td>{{ mail.getDateDenvoie|date('Y-m-d H:i:s') }}</td>
+            <td>
+                <a href="{{ path('app_delete_mail_educateur', {'id': mail.id}) }}" onclick="return confirm('Voulez-vous vraiment supprimer ce mail ?')">Supprimer</a>
+
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ path('app_send_mail_educateur') }}">Envoyer un Mail</a>
+</body>
+</html>

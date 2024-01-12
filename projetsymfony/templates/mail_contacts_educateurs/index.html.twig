@@ -1,5 +1,38 @@
-{% block title %}Envoyer un mail{% endblock %}
+{# templates/mail_contacts_educateurs/index.html.twig #}
 
-{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Mails aux Contacts Éducateurs</title>
+</head>
+<body>
+<h1>Liste des Mails aux Contacts Éducateurs</h1>
 
-{% endblock %}
+<table>
+    <thead>
+    <tr>
+        <th>Objet</th>
+        <th>Message</th>
+        <th>Date d'Envoi</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for mail in mails %}
+        <tr>
+            <td>{{ mail.objet }}</td>
+            <td>{{ mail.message }}</td>
+            <td>{{ mail.getDateDenvoie()|date('Y-m-d H:i:s') }}</td>
+            <td>
+                <a href="{{ path('app_mail_contact_delete',{'id': mail.id}) }}">Supprimer</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ path('app_send_mail_contact') }}">Envoyer un Mail</a>
+</body>
+</html>
