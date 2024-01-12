@@ -1,0 +1,19 @@
+{# templates/listes/liste_contacts_par_categorie.html.twig #}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des Contacts par Catégorie</title>
+</head>
+<body>
+    <h1>Liste des Contacts par Catégorie</h1>
+
+    <h2>Catégorie : {{ categorie.nom }}</h2>
+
+    <ul>
+        {% for contact in contacts %}
+            <li>{{ contact.getNom() }} {{ contact.getPrenom() }} - {{ contact.getEmail() }} - {{ contact.getNumeroTel() }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

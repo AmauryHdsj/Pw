@@ -1,0 +1,37 @@
+# config/routes.yaml
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+    
+app_login:
+    path: /login
+    controller: App\Controller\SecurityController::login
+
+app_logout:
+    path: /logout
+    controller: App\Controller\SecurityController::logout
+   
+
+liste_categories:
+    path: /categories
+    controller: App\Controller\ListeCategoriesController::listeCategories
+    methods: ['GET']
+
+lister_licencies_par_categorie:
+    path: /categorie/{categorieId}/licencies
+    controller: App\Controller\ListeLicencieCategorieController::listerLicenciesParCategorie
+    methods: ['GET']
+
+
+lister_contacts_par_categorie:
+    path: '/categorie/{categorieId}/contacts'
+    controller: 'App\Controller\ListeContactCategorieController::listerContactsParCategorie'
+    methods: ['GET']
+    requirements:
+        categorieId: '\d+' 
+
+
+
+

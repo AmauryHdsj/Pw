@@ -1,0 +1,28 @@
+{# templates/categorie/liste_categories.html.twig #}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des Catégories</title>
+</head>
+<body>
+    <h1>Liste des Catégories</h1>
+
+    <ul>
+        {% for categorie in categories %}
+            <li>
+                {{ categorie.nom }}
+                <a href="{{ path('lister_licencies_par_categorie', {'categorieId': categorie.id}) }}">
+                    licenciés
+                </a>
+                 <a href="{{ path('lister_contacts_par_categorie', {'categorieId': categorie.id}) }}">
+                    contacts
+                </a>
+            </li>
+           
+             
+           
+        {% endfor %}
+    </ul>
+</body>
+</html>
