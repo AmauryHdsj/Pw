@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ListeCategoriesController extends AbstractController
 {
-    #[Route('/liste/categories', name: 'app_liste_categories')]
+   // #[Route('/liste/categories', name: 'app_liste_categories')]
     public function index(): Response
     {
         return $this->render('liste_categories/index.html.twig', [
