@@ -116,7 +116,7 @@ class LicencieDAO {
         $csvFile = fopen($csvFileName, 'w');
 
         // Écrire l'en-tête CSV
-        fputcsv($csvFile, ['ID', 'Numero Licence', 'Nom', 'Prenom', 'Contact ID', 'Categorie ID']);
+        fputcsv($csvFile, ['ID', 'Numero Licence', 'Nom', 'Prenom', 'Contact Nom', 'Categorie ']);
 
         // Récupérer la liste des licenciés
         $licencies = $this->listLicencies();
@@ -131,8 +131,8 @@ class LicencieDAO {
                 $licencie->getNumeroLicence(),
                 $licencie->getNom(),
                 $licencie->getPrenom(),
-                $contact->getId(),
-                $categorie->getId()
+                $contact->getPrenom(),
+                $categorie->getCodeRaccourci()
             ];
 
             // Écrire la ligne dans le fichier CSV
