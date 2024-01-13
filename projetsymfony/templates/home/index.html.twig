@@ -44,6 +44,17 @@
           <!-- Add your dynamic routes here using the path function -->
           <li><a href="{{ path(app.request.attributes.get('_route')) }}">Home</a></li>
           <li><a href="{{ path('liste_categories') }}">Catégories</a></li>
+                <li class="dropdown">
+            <a href="{{ path(app.request.attributes.get('_route')) }}">
+                <span>Maille envoyé </span> <i class="bi bi-chevron-down dropdown-indicator"></i>
+            </a>
+            <ul>
+                <li><a href="{{ path('app_mail_edu_educateurs') }}">Educateurs</a></li>
+                 <li><a href="{{ path('app_mail_contacts_educateurs') }}">Contacts</a></li>
+
+            </ul>
+        </li>
+
           <li><a href="{{ path(app.request.attributes.get('_route'))}}">Services</a></li>
           <li><a href="{{ path(app.request.attributes.get('_route')) }}">Portfolio</a></li>
           <li><a href="{{ path(app.request.attributes.get('_route')) }}">Team</a></li>

@@ -33,19 +33,5 @@ lister_contacts_par_categorie:
 
 # config/routes.yaml
 
-list_mail:
-    path: '/list/mail'
-    controller: 'App\Controller\MailController::viewMail'
-    methods: ['GET']
-
-# config/routes.yaml
-mail_contacts_educateurs:
-    path: /mail/contacts/educateurs
-    controller: App\Controller\MailContactsEducateursController::index
-
-app_send_mail_contact:
-    path: /mail/contact/send
-    controller: App\Controller\MailContactsEducateursController::add
-
 
 

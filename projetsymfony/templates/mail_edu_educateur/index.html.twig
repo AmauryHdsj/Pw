@@ -1,39 +1,64 @@
-{# templates/mail_educateur/index.html.twig #}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste des Mails Éducateurs</title>
-</head>
-<body>
-<h1>Liste des Mails Éducateurs</h1>
-
-<table>
-    <thead>
-    <tr>
-        <th>Objet</th>
-        <th>Message</th>
-        <th>Date d'Envoi</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for mail in mails %}
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+<div class="example-wrapper">
+    <a href="{{ path('app_send_mail_contact') }}"> Envoyer un nouveau mail</a>
+    <a href="{{ path('app_logout') }}"> deconnexion</a>
+    <table>
+        <thead>
         <tr>
-            <td>{{ mail.objet }}</td>
-            <td>{{ mail.message }}</td>
-            <td>{{ mail.getDateDenvoie|date('Y-m-d H:i:s') }}</td>
             <td>
-                <a href="{{ path('app_delete_mail_educateur', {'id': mail.id}) }}" onclick="return confirm('Voulez-vous vraiment supprimer ce mail ?')">Supprimer</a>
-
+                Date
+            </td>
+            <td>
+                Objet
+            </td>
+            <td>
+                Message
+            </td>
+            <td>
+                Destinataire
+            </td>
+            <td>
+                action
             </td>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
-
-<a href="{{ path('app_send_mail_educateur') }}">Envoyer un Mail</a>
-</body>
-</html>
+        </thead>
+        <tbody>
+        {% for mail in mails %}
+        <tr>
+            <td>
+                {{ mail.DateDenvoie| date('d/m/Y') }}
+            </td>
+            <td>
+                {{ mail.Objet }}
+            </td>
+            <td>
+                {{ mail.Message }}
+            </td>
+            <td>
+                <ul>
+                    <li>
+                        {% for desti in mail.destinataire %}
+                        {{ desti.email }}{% if not loop.last %}, {% endif %}
+                    </li>
+                </ul>
+                {% endfor %}
+            </td>
+            <td>
+            <td>
+            <a href="{{ path('app_mail_contact_delete', {'id':mail.id}) }}"> Supprimer</a>
+            </td>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <ul>
+    </ul>
+</div>
+{% endblock %}
+ 
