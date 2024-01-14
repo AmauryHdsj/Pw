@@ -39,12 +39,30 @@
       </a>
       <nav id="navbar" class="navbar">
         <ul>
+          <!-- Add your dynamic routes here using the path function -->
           <li><a href="{{ path(app.request.attributes.get('_route')) }}">Home</a></li>
           <li><a href="{{ path('liste_categories') }}">Catégories</a></li>
-          <li><a href="{{ path(app.request.attributes.get('_route')) }}">Services</a></li>
-          <li><a href="{{ path(app.request.attributes.get('_route')) }}">Portfolio</a></li>
-          <li><a href="{{ path(app.request.attributes.get('_route')) }}">Team</a></li>
-          <li><a href="{{ path(app.request.attributes.get('_route')) }}">Blog</a></li>
+          <li class="dropdown">
+            <a href="{{ path(app.request.attributes.get('_route')) }}">
+                <span>Mails envoyé </span> <i class="bi bi-chevron-down dropdown-indicator"></i>
+            </a>
+            <ul>
+                <li><a href="{{ path('app_mail_edu_educateurs') }}">Educateurs</a></li>
+                 <li><a href="{{ path('app_mail_contacts_educateurs') }}">Contacts</a></li>
+
+            </ul>
+        </li>
+                  <li class="dropdown">
+            <a href="{{ path(app.request.attributes.get('_route')) }}">
+                <span>Nouveau Mail </span> <i class="bi bi-chevron-down dropdown-indicator"></i>
+            </a>
+            <ul>
+                <li><a href="{{ path('app_send_mail_educateur') }}">Educateurs</a></li>
+                 <li><a href="{{ path('app_send_mail_contact') }}">Contacts</a></li>
+
+            </ul>
+        </li>
+          <li><a href="{{ path('app_logout') }}">Deconnexion</a></li>
         </ul>
       </nav>
       <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>

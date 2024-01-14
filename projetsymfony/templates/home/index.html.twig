@@ -44,9 +44,9 @@
           <!-- Add your dynamic routes here using the path function -->
           <li><a href="{{ path(app.request.attributes.get('_route')) }}">Home</a></li>
           <li><a href="{{ path('liste_categories') }}">Catégories</a></li>
-                <li class="dropdown">
+          <li class="dropdown">
             <a href="{{ path(app.request.attributes.get('_route')) }}">
-                <span>Maille envoyé </span> <i class="bi bi-chevron-down dropdown-indicator"></i>
+                <span>Mails envoyés </span> <i class="bi bi-chevron-down dropdown-indicator"></i>
             </a>
             <ul>
                 <li><a href="{{ path('app_mail_edu_educateurs') }}">Educateurs</a></li>
@@ -54,11 +54,17 @@
 
             </ul>
         </li>
+                  <li class="dropdown">
+            <a href="{{ path(app.request.attributes.get('_route')) }}">
+                <span>Nouveau Mail </span> <i class="bi bi-chevron-down dropdown-indicator"></i>
+            </a>
+            <ul>
+                <li><a href="{{ path('app_send_mail_educateur') }}">Educateurs</a></li>
+                 <li><a href="{{ path('app_send_mail_contact') }}">Contacts</a></li>
 
-          <li><a href="{{ path(app.request.attributes.get('_route'))}}">Services</a></li>
-          <li><a href="{{ path(app.request.attributes.get('_route')) }}">Portfolio</a></li>
-          <li><a href="{{ path(app.request.attributes.get('_route')) }}">Team</a></li>
-          <li><a href="{{ path(app.request.attributes.get('_route')) }}">Blog</a></li>
+            </ul>
+        </li>
+          <li><a href="{{ path('app_logout') }}">Deconnexion</a></li>
           <!-- ... -->
         </ul>
       </nav><!-- .navbar -->
@@ -71,7 +77,7 @@
     <section class="sample-page">
       <div class="container" data-aos="fade-up">
         <p>
-          Bienvenue sur votre page très chère Educateur
+          Bienvenue sur votre page très chère Educateur {{ app.user.userIdentifier }}
         </p>
       </div>
     </section>

@@ -1,33 +1,89 @@
-{% block title %}Envoyer un mail{% endblock %}
-
-
-{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>[Template] Sample Inner Page</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+  <!-- Favicons -->
+  <link href="{{ asset('assets/img/favicon.png') }}" rel="icon">
+  <link href="{{ asset('assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <!-- Vendor CSS Files -->
+  <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+  <link href="{{ asset('assets/vendor/aos/aos.css') }}" rel="stylesheet">
+  <link href="{{ asset('assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
+  <!-- Template Main CSS File -->
+  <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
+  <!-- Your custom styles go here -->
+  <!-- =======================================================
+  * Template Name: Impact
+  * Updated: Jan 09 2024 with Bootstrap v5.3.2
+  * Template URL: https://bootstrapmade.com/impact-bootstrap-business-website-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+<body>
+<section id="contact" class="contact">
     <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <h1 class="text-center mb-4">Envoyer un mail</h1>
+        <div class="row gx-lg-0 gy-4 justify-content-center">
+        <h1 class="text-center">Nouveau message</h1>
+            <div class="col-lg-8">
+            
+                {{ form_start(form, {'attr': {'class': 'custom-email-form'}}) }}
+                
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            {{ form_label(form.objet, 'Objet du mail', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.objet, {'attr': {'class': 'form-control', 'placeholder': 'Objet du mail'}}) }}
+                        </div>
+                        <div class="col-md-6 form-group mt-3 mt-md-0">
+                            {{ form_label(form.destinataire, 'Destinataire', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.destinataire, {'attr': {'class': 'form-control', 'placeholder': 'Destinataire'}}) }}
+                        </div>
+                    </div>
 
-                {{ form_start(form) }}
+                    <div class="form-group mt-3">
+                        {{ form_label(form.message, 'Votre message', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.message, {'attr': {'class': 'form-control', 'placeholder': 'Votre message', 'rows': '7'}}) }}
+                    </div>
 
-                <div class="mb-3">
-                    {{ form_label(form.objet, 'Objet du mail', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.objet, {'attr': {'class': 'form-control', 'placeholder': 'Objet du mail'}}) }}
-                </div>
-
-                <div class="mb-3">
-                    {{ form_label(form.message, 'Votre message', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.message, {'attr': {'class': 'form-control', 'placeholder': 'Votre message'}}) }}
-                </div>
-
-                <div class="mb-3">
-                    {{ form_label(form.destinataire, 'Destinataire', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.destinataire, {'attr': {'class': 'form-control', 'placeholder': 'Destinataire'}}) }}
-                </div>
-
-                <button type="submit" class="btn btn-primary">Envoyer</button>
-
+                    <div class="form-group mt-3 text-center">
+                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                    </div>
+                    <div class="form-group mt-3 text-center">
+                        <a href="{{ path('app_mail_edu_educateurs') }}"> retour</a>
+                    </div>
                 {{ form_end(form) }}
             </div>
         </div>
     </div>
-{% endblock %}
+</section>
+
+
+     <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ asset('assets/vendor/aos/aos.js') }}"></script>
+  <script src="{{ asset('assets/vendor/glightbox/js/glightbox.min.js') }}"></script>
+  <script src="{{ asset('assets/vendor/purecounter/purecounter_vanilla.js') }}"></script>
+  <script src="{{ asset('assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
+  <script src="{{ asset('assets/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
+  <script src="{{ asset('assets/vendor/php-email-form/validate.js') }}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{{ asset('assets/js/main.js') }}"></script>
+
+</body>
+</html>
+
