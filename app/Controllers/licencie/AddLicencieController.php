@@ -10,9 +10,19 @@ class AddLicencieController
         $this->contactDAO = $contactDAO;
         $this->categorieDAO = $categorieDAO;
     }
+    private function checkAuthentication() {
+        // Vérifier si l'utilisateur est authentifié en tant qu'administrateur
+        session_start();
+        if (!isset($_SESSION['email'])) {
+            // Rediriger vers la page de connexion si non authentifié
+            header('Location: ../../index.php');
+            exit();
+        }
+    }
 
     public function index() {
         // Récupérer la liste des contacts et des catégories
+        $this->checkAuthentication();
         $contacts = $this->contactDAO->listContacts();
         $categories = $this->categorieDAO->listCategories();
 

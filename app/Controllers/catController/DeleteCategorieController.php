@@ -5,7 +5,18 @@ class DeleteCategorieController {
     public function __construct(CategorieDAO $categorieDAO) {
         $this->categorieDAO = $categorieDAO;
     }
-
+    private function checkAuthentication() {
+        session_start();
+        // Vérifier si l'utilisateur est authentifié en tant qu'administrateur
+        if (!isset($_SESSION['email'])) {
+            // Rediriger vers la page de connexion si non authentifié
+            header('Location: ../../index.php');
+            exit();
+        }
+    }
+    public function index(){
+        $this->checkAuthentication();
+    }
     public function deleteCategorie($categorieId) {
         // Récupérer le contact à supprimer en utilisant son ID
         $categorie = $this->categorieDAO->getById($categorieId);
@@ -40,6 +51,7 @@ require_once("../../Models/Categorie.php");
 require_once("../../DAO/CategorieDAO.php");
 $categorieDAO=new CategorieDAO(new Connexion());
 $controller=new DeleteCategorieController($categorieDAO);
+$controller->index();
 $controller->deleteCategorie($_GET['id']);
 
 

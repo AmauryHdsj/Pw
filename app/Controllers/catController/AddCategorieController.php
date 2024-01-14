@@ -6,9 +6,19 @@ class AddCategorieController
     public function __construct(CategorieDAO $categorieDAO) {
         $this->categorieDAO = $categorieDAO;
     }
+    private function checkAuthentication() {
+        session_start();
+    // Vérifier si l'utilisateur est authentifié en tant qu'administrateur
+    if (!isset($_SESSION['email'])) {
+        // Rediriger vers la page de connexion si non authentifié
+        header('Location: ../../index.php');
+        exit();
+    }
+}
 
     public function index() {
         // Inclure la vue pour afficher le formulaire d'ajout de contact
+        $this->checkAuthentication();
         include('../../Views/categorie/create.php');
         }
         // Fonction pour ajouter une nouvelle catégorie

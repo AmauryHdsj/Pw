@@ -10,9 +10,20 @@ class AddEducateurController
         $this->educateurDAO = $educateurDAO;
         $this->licencieDAO = $licencieDAO;
     }
+    private function checkAuthentication() {
+        session_start();
+    // Vérifier si l'utilisateur est authentifié en tant qu'administrateur
+    if (!isset($_SESSION['email'])) {
+        // Rediriger vers la page de connexion si non authentifié
+        header('Location: ../../index.php');
+        exit();
+    }
+    }
+
 
     public function index()
     {
+        $this->checkAuthentication();
         // Récupérer la liste des licenciés
         $licencies = $this->licencieDAO->getLicenciesNonEducateurs();
 

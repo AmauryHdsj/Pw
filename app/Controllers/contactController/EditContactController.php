@@ -5,6 +5,18 @@ class EditContactController {
     public function __construct(ContactDAO $contactDAO) {
         $this->contactDAO = $contactDAO;
     }
+    private function checkAuthentication() {
+        session_start();
+        // Vérifier si l'utilisateur est authentifié en tant qu'administrateur
+        if (!isset($_SESSION['email'])) {
+            // Rediriger vers la page de connexion si non authentifié
+            header('Location: ../../index.php');
+            exit();
+        }
+    }
+    public function index(){
+        $this->checkAuthentication();
+    }
 
     public function editContact($contactId) {
         // Récupérer le contact à modifier en utilisant son ID
@@ -53,6 +65,7 @@ require_once("../../Models/contact.php");
 require_once("../../DAO/ContactDAO.php");
 $contactDAO=new ContactDAO(new Connexion());
 $controller=new EditContactController($contactDAO);
+$controller->index();
 $controller->editContact($_GET['id']);
 ?>
 

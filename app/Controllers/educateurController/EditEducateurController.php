@@ -7,6 +7,19 @@ class EditEducateurController {
         $this->educateurDAO = $educateurDAO;
         $this->licencieDAO = $licencieDAO;
     }
+    private function checkAuthentication() {
+        session_start();
+    // Vérifier si l'utilisateur est authentifié en tant qu'administrateur
+    if (!isset($_SESSION['email'])) {
+        // Rediriger vers la page de connexion si non authentifié
+        header('Location: ../../index.php');
+        exit();
+    }
+}
+    public function index()
+    {
+        $this->checkAuthentication();
+    }
 
     public function editEducateur($educateurId) {
         // Récupérer l'éducateur à modifier en utilisant son ID
@@ -68,5 +81,6 @@ $educateurDAO = new EducateurDAO(new Connexion());
 $licencieDAO = new LicencieDAO(new Connexion());
 
 $controller = new EditEducateurController($educateurDAO, $licencieDAO);
+$controller->index();
 $controller->editEducateur($_GET['id']);
 ?>

@@ -5,7 +5,19 @@ class DeleteLicencieController {
     public function __construct(LicencieDAO $licencieDAO) {
         $this->licencieDAO = $licencieDAO;
     }
-
+    private function checkAuthentication() {
+        session_start();
+        // Vérifier si l'utilisateur est authentifié en tant qu'administrateur
+        if (!isset($_SESSION['email'])) {
+            // Rediriger vers la page de connexion si non authentifié
+            header('Location: ../../index.php');
+            exit();
+        }
+    }
+    public function index()
+    {
+        $this->checkAuthentication();
+    }
     public function deleteLicencie($licencieId) {
         // Récupérer le licencié à supprimer en utilisant son ID
         $licencie = $this->licencieDAO->getLicencieById($licencieId);
@@ -40,5 +52,6 @@ require_once("../../DAO/LicencieDAO.php");
 
 $licencieDAO = new LicencieDAO(new Connexion());
 $controller = new DeleteLicencieController($licencieDAO);
+$controller->index();
 $controller->deleteLicencie($_GET['id']);
 ?>

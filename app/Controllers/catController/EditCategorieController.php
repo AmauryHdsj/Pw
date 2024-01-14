@@ -5,7 +5,18 @@ class EditCategorieController {
     public function __construct(CategorieDAO $categorieDAO) {
         $this->categorieDAO = $categorieDAO;
     }
-
+    private function checkAuthentication() {
+        session_start();
+        // Vérifier si l'utilisateur est authentifié en tant qu'administrateur
+        if (!isset($_SESSION['email'])) {
+            // Rediriger vers la page de connexion si non authentifié
+            header('Location: ../../index.php');
+            exit();
+        }
+    }
+    public function index(){
+        $this->checkAuthentication();
+    }
     public function editCategorie($categorieId) {
         // Récupérer le contact à modifier en utilisant son ID
         $categorie = $this->categorieDAO->getById($categorieId);
@@ -48,6 +59,7 @@ require_once("../../Models/Categorie.php");
 require_once("../../DAO/CategorieDAO.php");
 $categorieDAO=new CategorieDAO(new Connexion());
 $controller=new EditCategorieController($categorieDAO);
+$controller->index();
 $controller->editCategorie($_GET['id']);
 ?>
 

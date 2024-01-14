@@ -7,23 +7,12 @@ class AuthController {
         $this->educateurDAO = $educateurDAO;
     }
 
-    public function login() {
-        // Si l'utilisateur est déjà connecté, redirigez-le vers la page d'accueil des éducateurs
-        session_start();
-        if (isset($_SESSION['email'])) {
-            // header('Location:EducateurController.php');
-            exit();
-        }
 
-        // Gérer les erreurs de connexion
-        $error = isset($_GET['error']) ? true : false;
-
-        // Inclure la vue pour afficher le formulaire de connexion
-        include('../Views/Authentification/login.php');
-    }
 
     public function processLogin() {
+
         // Si l'utilisateur est déjà connecté, redirigez-le vers la page d'accueil des éducateurs
+
         if (isset($_SESSION['email'])) {
             header('Location: EducateurController.php');
             exit();
@@ -31,10 +20,10 @@ class AuthController {
 
         // Gérer les données du formulaire de connexion
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            session_start();
             $email = $_POST['email'];
             $motDePasse = $_POST['mot_de_passe'];
-            session_start();
-
             try {
                 $educateur = $this->educateurDAO->getEducateurByEmail($email);
 
@@ -80,11 +69,9 @@ $educateurDAO = new EducateurDAO(new Connexion());
 $controller = new AuthController($educateurDAO);
 
 // Gérer les actions du formulaire
-if (!isset($_POST['action'])) {
-    header('Location:index.php');
-} else {
+
     $controller->processLogin();
-}
+
 
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
 $controller->logout();

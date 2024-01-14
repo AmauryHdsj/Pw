@@ -6,7 +6,19 @@ class DeleteEducateurController {
     public function __construct(EducateurDAO $educateurDAO) {
         $this->educateurDAO = $educateurDAO;
     }
-
+    private function checkAuthentication() {
+        session_start();
+        // Vérifier si l'utilisateur est authentifié en tant qu'administrateur
+        if (!isset($_SESSION['email'])) {
+            // Rediriger vers la page de connexion si non authentifié
+            header('Location: ../../index.php');
+            exit();
+        }
+    }
+    public function index()
+    {
+        $this->checkAuthentication();
+    }
     public function deleteEducateur($educateurId) {
         // Récupérer l'éducateur à supprimer en utilisant son ID
         $educateur = $this->educateurDAO->getEducateurById($educateurId);
@@ -41,4 +53,5 @@ require_once("../../DAO/EducateurDAO.php");
 
 $educateurDAO = new EducateurDAO(new Connexion());
 $controller = new DeleteEducateurController($educateurDAO);
+$controller->index();
 $controller->deleteEducateur($_GET['id']);

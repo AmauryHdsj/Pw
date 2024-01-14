@@ -5,7 +5,18 @@ class DeleteContactController {
     public function __construct(ContactDAO $contactDAO) {
         $this->contactDAO = $contactDAO;
     }
-
+    private function checkAuthentication() {
+        session_start();
+        // Vérifier si l'utilisateur est authentifié en tant qu'administrateur
+        if (!isset($_SESSION['email'])) {
+            // Rediriger vers la page de connexion si non authentifié
+            header('Location: ../../index.php');
+            exit();
+        }
+    }
+    public function index(){
+        $this->checkAuthentication();
+    }
     public function deleteContact($contactId) {
         // Récupérer le contact à supprimer en utilisant son ID
         $contact = $this->contactDAO->getById($contactId);
@@ -43,6 +54,7 @@ require_once("../../Models/Contact.php");
 require_once("../../DAO/ContactDAO.php");
 $contactDAO=new ContactDAO(new Connexion());
 $controller=new DeleteContactController($contactDAO);
+$controller->index();
 $controller->deleteContact($_GET['id']);
 
 

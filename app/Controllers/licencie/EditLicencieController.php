@@ -9,7 +9,19 @@ class EditLicencieController {
         $this->contactDAO = $contactDAO;
         $this->categorieDAO = $categorieDAO;
     }
-
+    private function checkAuthentication() {
+        // Vérifier si l'utilisateur est authentifié en tant qu'administrateur
+        session_start();
+        if (!isset($_SESSION['email'])) {
+            // Rediriger vers la page de connexion si non authentifié
+            header('Location: ../../index.php');
+            exit();
+        }
+    }
+    public function index()
+    {
+        $this->checkAuthentication();
+    }
     public function editLicencie($licencieId) {
         // Récupérer le licencié à modifier en utilisant son ID
         $licencie = $this->licencieDAO->getLicencieById($licencieId);
@@ -75,5 +87,6 @@ $contactDAO = new ContactDAO(new Connexion());
 $categorieDAO = new CategorieDAO(new Connexion());
 
 $controller = new EditLicencieController($licencieDAO, $contactDAO, $categorieDAO);
+$controller->index();
 $controller->editLicencie($_GET['id']);
 ?>

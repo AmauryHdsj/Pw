@@ -8,9 +8,20 @@ class EducateurController
     {
         $this->educateurDAO = $educateurDAO;
     }
+    private function checkAuthentication() {
+        // Vérifier si l'utilisateur est authentifié en tant qu'administrateur
+        session_start();
 
+
+        if (!isset($_SESSION['email'])) {
+            // Rediriger vers la page de connexion si non authentifié
+            header('Location: ../../index.php');
+            exit();
+        }
+    }
     public function index()
     {
+        $this->checkAuthentication();
         // Récupérer la liste de tous les éducateurs depuis le modèle
         $educateurs = $this->educateurDAO->listEducateurs();
 

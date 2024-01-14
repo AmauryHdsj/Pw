@@ -6,9 +6,18 @@ class LicencieController {
     public function __construct(LicencieDAO $licencieDAO) {
         $this->licencieDAO = $licencieDAO;
     }
-
+    private function checkAuthentication() {
+        // Vérifier si l'utilisateur est authentifié en tant qu'administrateur
+        session_start();
+        if (!isset($_SESSION['email'])) {
+            // Rediriger vers la page de connexion si non authentifié
+            header('Location: ../../index.php');
+            exit();
+        }
+    }
     public function index() {
         // Récupérer la liste de tous les licenciés depuis le modèle
+        $this->checkAuthentication();
         $licencies = $this->licencieDAO->listLicencies();
 
         // Inclure la vue pour afficher la liste des licenciés
@@ -63,7 +72,7 @@ require_once("../DAO/CategorieDAO.php");
 require_once("../DAO/LicencieDAO.php");
 $licencieDAO = new LicencieDAO(new Connexion());
 $controller = new LicencieController($licencieDAO);
-session_start();
+$controller->index();
 if ( isset($_GET['action']) && $_GET['action'] === 'exportCSV') {
     $controller->exportCSV();
 }
@@ -71,7 +80,7 @@ if ( isset($_GET['action']) && $_GET['action'] === 'importCSV') {
 
     $controller->importCSV();
 }
-$controller->index();
+
 // Dans le contrôleur LicencieController
 
 // Dans LicencieController.php
