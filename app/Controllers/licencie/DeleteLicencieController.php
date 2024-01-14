@@ -24,7 +24,7 @@ class DeleteLicencieController {
                 exit();
             } else {
                 // Gérer les erreurs de suppression du licencié
-                echo "Erreur lors de la suppression du licencié.";
+                $_SESSION['error'][] = "Le licencié est associé a un éducateur.";
             }
         }
 

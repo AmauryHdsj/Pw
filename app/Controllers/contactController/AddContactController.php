@@ -10,7 +10,7 @@ class AddContactController {
     // Inclure la vue pour afficher le formulaire d'ajout de contact
     include('../../Views/contact/create.php');
     }
-    
+
     public function addContact() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Récupérer les données du formulaire
@@ -19,25 +19,35 @@ class AddContactController {
             $email = $_POST['email'];
             $telephone = $_POST['numero'];
 
-            // Valider les données du formulaire (ajoutez des validations si nécessaire)
-
-            // Créer un nouvel objet ContactModel avec les données du formulaire
-            $nouveauContact = new Contact(0,$nom, $prenom, $email, $telephone);
-
-            // Appeler la méthode du modèle (ContactDAO) pour ajouter le contact
-            if ($this->contactDAO->createContact($nouveauContact)) {
-                // Rediriger vers la page d'accueil après l'ajout
-                header('Location:../ContactController.php');
-                exit();
+            // Vérifier si l'email existe déjà
+            if ($this->contactDAO->getByEmail($email)) {
+                $_SESSION['error'][] = "L'email existe déjà";
             } else {
-                // Gérer les erreurs d'ajout de contact
-                echo "Erreur lors de l'ajout du contact.";
+                // Vérifier le format du numéro de téléphone (par exemple, XXX-XXXXXXX)
+                if (!preg_match("/^[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{2}$/", $telephone)) {
+                $_SESSION['error'][] = "Le format du numéro de téléphone n'est pas valide (ex: XX-XX-XX-XX-XX)";
+            }
+            else {
+                    // Créer un nouvel objet ContactModel avec les données du formulaire
+                    $nouveauContact = new Contact(0, $nom, $prenom, $email, $telephone);
+
+                    // Appeler la méthode du modèle (ContactDAO) pour ajouter le contact
+                    if ($this->contactDAO->createContact($nouveauContact)) {
+                        // Rediriger vers la page d'accueil après l'ajout
+                        header('Location:../ContactController.php');
+                        exit();
+                    } else {
+                        // Gérer les erreurs d'ajout de contact
+                        $_SESSION['error'][] = "Erreur lors de l'ajout du contact.";
+                    }
+                }
             }
         }
 
         // Inclure la vue pour afficher le formulaire d'ajout de contact
         include('../../Views/contact/create.php');
     }
+
 }
 
 

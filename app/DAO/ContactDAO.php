@@ -71,4 +71,21 @@ class ContactDAO {
             return [];
         }
     }
+    public function getByEmail($email) {
+        try {
+            $stmt = $this->connexion->pdo->prepare("SELECT * FROM contacts WHERE email = ?");
+            $stmt->execute([$email]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($row) {
+                return new Contact($row['id'], $row['nom'], $row['prenom'], $row['email'], $row['numero_tel']);
+            } else {
+                return null; // Aucun contact trouvé avec cet email
+            }
+        } catch (PDOException $e) {
+            // Gérer les erreurs de récupération ici
+            return null;
+        }
+    }
+
 }

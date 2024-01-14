@@ -21,6 +21,43 @@ class LicencieDAO {
             return false;
         }
     }
+// Dans votre LicencieDAO, ajoutez la méthode suivante :
+
+    // Dans votre LicencieDAO, ajoutez la méthode suivante :
+
+    public function getLicenciesNonEducateurs(){
+        try {
+            $stmt = $this->connexion->pdo->query("SELECT * FROM licencies WHERE id NOT IN (SELECT licencie_id FROM educateurs)");
+            $licencies = [];
+
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $contactDAO = new ContactDAO($this->connexion);
+                $categorieDAO = new CategorieDAO($this->connexion);
+
+                $contact = $contactDAO->getById($row['contact_id']);
+                $categorie = $categorieDAO->getById($row['categorie_id']);
+
+                $licencie = new Licencie(
+                    $row['id'],
+                    $row['numero_licence'],
+                    $row['nom'],
+                    $row['prenom'],
+                    $contact,
+                    $categorie
+                );
+
+                $licencies[] = $licencie;
+            }
+
+            return $licencies;
+        } catch (PDOException $e) {
+            // Gérer les erreurs de récupération ici
+            return [];
+        }
+
+    }
+
+
 
     public function setLicencie(Licencie $licencie) {
         try {
@@ -131,8 +168,8 @@ class LicencieDAO {
                 $licencie->getNumeroLicence(),
                 $licencie->getNom(),
                 $licencie->getPrenom(),
-                $contact->getPrenom(),
-                $categorie->getCodeRaccourci()
+                $contact->getId(),
+                $categorie->getId()
             ];
 
             // Écrire la ligne dans le fichier CSV
@@ -200,6 +237,7 @@ class LicencieDAO {
             return false;
         }
     }
+
 
 }
 

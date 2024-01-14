@@ -24,7 +24,8 @@ class DeleteCategorieController {
                 exit();
             } else {
                 // Gérer les erreurs de suppression du contact
-                echo "Erreur lors de la suppression du contact.";
+                $_SESSION['error'][] = "La catégorie est associé a un licencié.";
+
             }
         }
 

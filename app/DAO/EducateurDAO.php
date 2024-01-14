@@ -9,14 +9,15 @@ class EducateurDAO {
 
     public function createEducateur(Educateur $educateur) {
         try {
-
-
             // Hacher le mot de passe avec le sel
-            $hashedPassword = password_hash($educateur->getMotDePasse() , PASSWORD_BCRYPT);
+            $hashedPassword = password_hash($educateur->getMotDePasse(), PASSWORD_BCRYPT);
+
+            // Convertir le booléen en entier
+            $estAdminInt = $educateur->getEstAdministrateur() ? 1 : 0;
 
             // Insérer l'éducateur dans la table educateurs et récupérer l'ID généré
             $stmt = $this->connexion->pdo->prepare("INSERT INTO educateurs (email, mot_de_passe, est_administrateur, licencie_id) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$educateur->getEmail(), $hashedPassword, $educateur->getEstAdministrateur(), $educateur->getLicencie()->getId()]);
+            $stmt->execute([$educateur->getEmail(), $hashedPassword, $estAdminInt, $educateur->getLicencie()->getId()]);
 
             $educateur->setId($this->connexion->pdo->lastInsertId());
             return true;
@@ -28,14 +29,15 @@ class EducateurDAO {
 
 
 
+
     public function updateEducateur(Educateur $educateur) {
         try {
             // Hacher le nouveau mot de passe avec password_hash
             $hashedPassword = password_hash($educateur->getMotDePasse(), PASSWORD_BCRYPT);
-
+            $estAdminInt = $educateur->getEstAdministrateur() ? 1 : 0;
             // Mettre à jour les informations de l'éducateur dans la base de données
             $stmt = $this->connexion->pdo->prepare("UPDATE educateurs SET email=?, mot_de_passe=?, est_administrateur=?, licencie_id=? WHERE id=?");
-            $stmt->execute([$educateur->getEmail(), $hashedPassword, $educateur->getEstAdministrateur(), $educateur->getLicencie()->getId(), $educateur->getId()]);
+            $stmt->execute([$educateur->getEmail(), $hashedPassword, $estAdminInt, $educateur->getLicencie()->getId(), $educateur->getId()]);
 
             return true;
         } catch (PDOException $e) {

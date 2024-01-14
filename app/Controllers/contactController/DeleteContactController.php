@@ -12,19 +12,23 @@ class DeleteContactController {
 
         if (!$contact) {
             // Le contact n'a pas été trouvé, vous pouvez rediriger ou afficher un message d'erreur
-            echo "Le contact n'a pas été trouvé.";
-            return;
+            $_SESSION['error'][] = "Le contact n'a pas été trouvé.";
+            header('Location:../ContactController.php');
+            exit();
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Supprimer le contact en appelant la méthode du modèle (ContactDAO)
             if ($this->contactDAO->removeContact($contactId)) {
                 // Rediriger vers la page d'accueil après la suppression
+
                 header('Location:../ContactController.php');
                 exit();
             } else {
                 // Gérer les erreurs de suppression du contact
-                echo "Erreur lors de la suppression du contact.";
+                $_SESSION['error'][] = "Le contact est associé a un licencié.";
+                include('../../Views/contact/delete.php');
+                exit();
             }
         }
 

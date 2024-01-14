@@ -19,7 +19,7 @@ class EditEducateurController {
         }
 
         // Récupérer la liste des licenciés pour le menu déroulant
-        $licencies = $this->licencieDAO->listLicencies();
+        $licencies = $this->licencieDAO->getLicenciesNonEducateurs();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Récupérer les données du formulaire

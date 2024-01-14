@@ -84,6 +84,29 @@
         </div>
 
     </div>
+    <div id="alert-container" class="position-fixed w-25" style="top: 10px; right: 10px; z-index: 1000;">
+        <?php
+        if (isset($_SESSION['error']) && !empty($_SESSION['error'])) {
+            $errorType = ($_SESSION['error'][0] === "L'email existe deja!") ? 'success' : 'danger';
+            echo '<div class="alert alert-' . $errorType . ' alert-dismissible fade show" role="alert">';
+            echo $_SESSION['error'][0];
+            echo '<button type="button" class="close" data-dismiss="alert" aria-label="Close">';
+            echo '<span aria-hidden="true">&times;</span>';
+            echo '</button>';
+            echo '</div>';
+            unset($_SESSION['error']); // Effacer la variable de session après l'avoir utilisée
+        }
+        ?>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('.alert').on('closed.bs.alert', function () {
+                location.reload(true);
+            });
+        });
+    </script>
+
 
     <!-- Bootstrap core JavaScript-->
     <script src="../../../public/vendor/jquery/jquery.min.js"></script>
